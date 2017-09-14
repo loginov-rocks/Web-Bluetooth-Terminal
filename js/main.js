@@ -32,7 +32,7 @@ function requestBluetoothDevice() {
 
 function connectDeviceAndCacheCharacteristic() {
   if (bluetoothDevice.gatt.connected && bluetoothCharacteristic) {
-    return Promise.resolve();
+    return Promise.resolve(bluetoothCharacteristic);
   }
 
   log('Connecting to GATT server...');
@@ -49,11 +49,18 @@ function connectDeviceAndCacheCharacteristic() {
         return service.getCharacteristic(CHARACTERISTIC_UUID);
       }).
       then(characteristic => {
-        log('Characteristic found');
+        log('Characteristic found', 'Starting notifications...');
 
         bluetoothCharacteristic = characteristic;
 
-        return bluetoothCharacteristic;
+        return bluetoothCharacteristic.startNotifications().then(_ => {
+          log('Notifications started');
+
+          bluetoothCharacteristic.addEventListener('characteristicvaluechanged',
+              handleCharacteristicValueChanged);
+
+          return bluetoothCharacteristic;
+        });
       });
 }
 
@@ -64,9 +71,13 @@ function log(...messages) {
   consoleDiv.insertAdjacentHTML('beforeend', html);
 }
 
-function handleDisconnection() {
+function handleDisconnection(event) {
   log('Bluetooth device disconnected');
 
   return connectDeviceAndCacheCharacteristic().
       catch(error => log(error));
+}
+
+function handleCharacteristicValueChanged(event) {
+  log('> ' + event.target.value);
 }
