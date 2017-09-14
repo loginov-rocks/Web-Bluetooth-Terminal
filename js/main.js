@@ -4,13 +4,24 @@ const CHARACTERISTIC_UUID = 0xFFE1;
 let connectButton = document.getElementById('connect');
 let disconnectButton = document.getElementById('disconnect');
 let consoleContainer = document.getElementById('console');
+let terminalContainer = document.getElementById('terminal');
 
 let bluetoothDevice = null;
 let bluetoothCharacteristic = null;
 
 connectButton.addEventListener('click', () => connect(bluetoothDevice));
 
-disconnectButton.addEventListener('click', () => disconnect(bluetoothDevice));
+disconnectButton.addEventListener('click', () => {
+  disconnect(bluetoothDevice);
+
+  if (bluetoothCharacteristic) {
+    bluetoothCharacteristic.removeEventListener('characteristicvaluechanged',
+        handleCharacteristicValueChanged);
+    bluetoothCharacteristic = null;
+  }
+
+  bluetoothDevice = null;
+});
 
 function connect(device) {
   return (device ? Promise.resolve(device) : requestBluetoothDevice()).
@@ -24,9 +35,9 @@ function disconnect(device) {
     return;
   }
 
-  device.removeEventListener('gattserverdisconnected', handleDisconnection);
-
   log('Disconnecting from "' + device.name + '" bluetooth device...');
+
+  device.removeEventListener('gattserverdisconnected', handleDisconnection);
 
   if (!device.gatt.connected) {
     log('"' + device.name + '" bluetooth device is already disconnected');
@@ -34,14 +45,6 @@ function disconnect(device) {
   }
 
   device.gatt.disconnect();
-
-  if (bluetoothCharacteristic) {
-    bluetoothCharacteristic.removeEventListener('characteristicvaluechanged',
-        handleCharacteristicValueChanged);
-    bluetoothCharacteristic = null;
-  }
-
-  bluetoothDevice = null;
 
   log('"' + device.name + '" bluetooth device disconnected');
 }
@@ -64,7 +67,7 @@ function requestBluetoothDevice() {
 }
 
 function connectDeviceAndCacheCharacteristic(device) {
-  if (device.gatt.connected && bluetoothCharacteristic) {
+  if (device.gatt.connected && bluetoothCharacteristic) { // check remembered characteristic
     return Promise.resolve(bluetoothCharacteristic);
   }
 
@@ -114,13 +117,6 @@ function stopNotifications(characteristic) {
       });
 }
 
-function log(...messages) {
-  let html = messages.join('<br>') + '<br>';
-
-  messages.forEach(message => console.log(message));
-  consoleContainer.insertAdjacentHTML('beforeend', html);
-}
-
 function handleDisconnection(event) {
   let device = event.target;
 
@@ -135,5 +131,18 @@ function handleDisconnection(event) {
 function handleCharacteristicValueChanged(event) {
   let value = new TextDecoder().decode(event.target.value);
 
-  log('> ' + value);
+  logToTerminal('> ' + value);
+}
+
+function log(...messages) {
+  let html = messages.join('<br>') + '<br>';
+
+  messages.forEach(message => console.log(message));
+  consoleContainer.insertAdjacentHTML('beforeend', html);
+}
+
+function logToTerminal(message) {
+  let html = message + '<br>';
+
+  terminalContainer.insertAdjacentHTML('beforeend', html);
 }
