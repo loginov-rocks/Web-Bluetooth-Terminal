@@ -1,17 +1,48 @@
 const SERVICE_UUID = 0xFFE0;
 const CHARACTERISTIC_UUID = 0xFFE1;
 
-let connectionButton = document.getElementById('connection');
-let consoleDiv = document.getElementById('console');
+let connectButton = document.getElementById('connect');
+let disconnectButton = document.getElementById('disconnect');
+let consoleContainer = document.getElementById('console');
 
 let bluetoothDevice = null;
 let bluetoothCharacteristic = null;
 
-connectionButton.addEventListener('click', function(event) {
-  return (bluetoothDevice ? Promise.resolve() : requestBluetoothDevice()).
+connectButton.addEventListener('click', () => connect(bluetoothDevice));
+
+disconnectButton.addEventListener('click', () => disconnect(bluetoothDevice));
+
+function connect(device) {
+  return (device ? Promise.resolve(device) : requestBluetoothDevice()).
       then(connectDeviceAndCacheCharacteristic).
+      then(startNotifications).
       catch(error => log(error));
-});
+}
+
+function disconnect(device) {
+  if (!device) {
+    return;
+  }
+
+  device.removeEventListener('gattserverdisconnected', handleDisconnection);
+
+  log('Disconnecting from "' + device.name + '" bluetooth device...');
+
+  if (!device.gatt.connected) {
+    log('"' + device.name + '" bluetooth device is already disconnected');
+    return;
+  }
+
+  device.gatt.disconnect();
+
+  if (bluetoothCharacteristic) {
+    bluetoothCharacteristic.removeEventListener('characteristicvaluechanged',
+        handleCharacteristicValueChanged);
+    bluetoothCharacteristic = null;
+  }
+
+  bluetoothDevice = null;
+}
 
 function requestBluetoothDevice() {
   log('Requesting bluetooth device...');
@@ -20,9 +51,9 @@ function requestBluetoothDevice() {
     filters: [{services: [SERVICE_UUID]}],
   }).
       then(device => {
-        log('Bluetooth device found');
+        log('"' + device.name + '" bluetooth device selected');
 
-        bluetoothDevice = device;
+        bluetoothDevice = device; // remember device
         bluetoothDevice.addEventListener('gattserverdisconnected',
             handleDisconnection);
 
@@ -30,14 +61,14 @@ function requestBluetoothDevice() {
       });
 }
 
-function connectDeviceAndCacheCharacteristic() {
-  if (bluetoothDevice.gatt.connected && bluetoothCharacteristic) {
+function connectDeviceAndCacheCharacteristic(device) {
+  if (device.gatt.connected && bluetoothCharacteristic) {
     return Promise.resolve(bluetoothCharacteristic);
   }
 
   log('Connecting to GATT server...');
 
-  return bluetoothDevice.gatt.connect().
+  return device.gatt.connect().
       then(server => {
         log('GATT server connected', 'Getting service...');
 
@@ -49,18 +80,35 @@ function connectDeviceAndCacheCharacteristic() {
         return service.getCharacteristic(CHARACTERISTIC_UUID);
       }).
       then(characteristic => {
-        log('Characteristic found', 'Starting notifications...');
+        log('Characteristic found');
 
-        bluetoothCharacteristic = characteristic;
+        bluetoothCharacteristic = characteristic; // remember characteristic
 
-        return bluetoothCharacteristic.startNotifications().then(_ => {
-          log('Notifications started');
+        return bluetoothCharacteristic;
+      });
+}
 
-          bluetoothCharacteristic.addEventListener('characteristicvaluechanged',
-              handleCharacteristicValueChanged);
+function startNotifications(characteristic) {
+  log('Starting notifications...');
 
-          return bluetoothCharacteristic;
-        });
+  return characteristic.startNotifications().
+      then(() => {
+        log('Notifications started');
+
+        characteristic.addEventListener('characteristicvaluechanged',
+            handleCharacteristicValueChanged);
+      });
+}
+
+function stopNotifications(characteristic) {
+  log('Stopping notifications...');
+
+  return characteristic.stopNotifications().
+      then(() => {
+        log('Notifications stopped');
+
+        characteristic.removeEventListener('characteristicvaluechanged',
+            handleCharacteristicValueChanged);
       });
 }
 
@@ -68,16 +116,21 @@ function log(...messages) {
   let html = messages.join('<br>') + '<br>';
 
   messages.forEach(message => console.log(message));
-  consoleDiv.insertAdjacentHTML('beforeend', html);
+  consoleContainer.insertAdjacentHTML('beforeend', html);
 }
 
 function handleDisconnection(event) {
-  log('Bluetooth device disconnected');
+  let device = event.target;
 
-  return connectDeviceAndCacheCharacteristic().
+  log('"' + device.name +
+      '" bluetooth device disconnected, trying to reconnect...');
+
+  connectDeviceAndCacheCharacteristic(device).
       catch(error => log(error));
 }
 
 function handleCharacteristicValueChanged(event) {
-  log('> ' + event.target.value);
+  let value = new TextDecoder().decode(event.target.value);
+
+  log('> ' + value);
 }
