@@ -5,6 +5,8 @@ let connectButton = document.getElementById('connect');
 let disconnectButton = document.getElementById('disconnect');
 let consoleContainer = document.getElementById('console');
 let terminalContainer = document.getElementById('terminal');
+let inputField = document.getElementById('input');
+let sendButton = document.getElementById('send');
 
 let bluetoothDevice = null;
 let bluetoothCharacteristic = null;
@@ -21,6 +23,11 @@ disconnectButton.addEventListener('click', () => {
   }
 
   bluetoothDevice = null;
+});
+
+sendButton.addEventListener('click', () => {
+  send(bluetoothCharacteristic, inputField.value);
+  inputField.value = '';
 });
 
 function connect(device) {
@@ -134,6 +141,16 @@ function handleCharacteristicValueChanged(event) {
   logToTerminal('> ' + value);
 }
 
+function send(characteristic, message) {
+  if (!characteristic) {
+    return;
+  }
+
+  logToTerminal('< ' + message);
+
+  characteristic.writeValue(str2ab(message + '\n'));
+}
+
 function log(...messages) {
   let html = messages.join('<br>') + '<br>';
 
@@ -145,4 +162,15 @@ function logToTerminal(message) {
   let html = message + '<br>';
 
   terminalContainer.insertAdjacentHTML('beforeend', html);
+}
+
+function str2ab(str) {
+  let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+  let bufView = new Uint16Array(buf);
+
+  for (let i = 0, strLen = str.length; i < strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+
+  return buf;
 }
