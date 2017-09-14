@@ -42,6 +42,8 @@ function disconnect(device) {
   }
 
   bluetoothDevice = null;
+
+  log('"' + device.name + '" bluetooth device disconnected');
 }
 
 function requestBluetoothDevice() {
@@ -126,6 +128,7 @@ function handleDisconnection(event) {
       '" bluetooth device disconnected, trying to reconnect...');
 
   connectDeviceAndCacheCharacteristic(device).
+      then(startNotifications).
       catch(error => log(error));
 }
 
