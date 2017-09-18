@@ -148,7 +148,7 @@ function send(characteristic, message) {
 
   logToTerminal('< ' + message);
 
-  characteristic.writeValue(str2ab(message + '\n'));
+  characteristic.writeValue(str2ab(message + '\r\n'));
 }
 
 function log(...messages) {
