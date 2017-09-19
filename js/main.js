@@ -1,29 +1,38 @@
+/**
+ * BluetoothConnection class
+ */
 class BluetoothConnection {
+  /**
+   * Constructor
+   * @param {number} serviceUuid Service UUID
+   * @param {number} characteristicUuid Characteristic UUID
+   */
   constructor(serviceUuid, characteristicUuid) {
     /**
      * String representing end of line for output data
      * @type {string}
      * @private
      */
-    _writeEol = '\r\n';
+    this._writeEol = '\r\n';
 
     /**
      * Character representing end of line for input data
      * @type {string}
      * @private
      */
-    _readEol = '\n';
+    this._readEol = '\n';
 
     /**
      * Buffer containing not ended input data
      * @type {string}
      * @private
      */
-    _readBuffer = '';
+    this._readBuffer = '';
 
-    this._device = null;
-    this._characteristic = null;
+    this._device = null; // device object cache
+    this._characteristic = null; // characteristic object cache
 
+    // Bound functions used to add and remove appropriate event handlers
     this._boundHandleDisconnection = this._handleDisconnection.bind(this);
     this._boundHandleCharacteristicValueChanged =
         this._handleCharacteristicValueChanged.bind(this);
@@ -36,10 +45,17 @@ class BluetoothConnection {
     this._terminalContainer = document.getElementById('terminal');
   }
 
+  /**
+   * Launch bluetooth device selector and connect to the selected device
+   * @returns {Promise}
+   */
   connect() {
     return this._connectToDevice(this._device);
   }
 
+  /**
+   * Disconnect from the connected device
+   */
   disconnect() {
     this._disconnectFromDevice(this._device);
 
@@ -50,6 +66,18 @@ class BluetoothConnection {
     }
 
     this._device = null;
+  }
+
+  /**
+   * Send data to the connected device
+   * @param {string} data
+   */
+  send(data) {
+    if (!data || !this._characteristic) {
+      return;
+    }
+
+    this._writeToCharacteristic(this._characteristic, String(data));
   }
 
   _connectToDevice(device) {
@@ -182,15 +210,7 @@ class BluetoothConnection {
     // Handle incoming data here
   }
 
-  send(message) {
-    if (!this._characteristic) {
-      return;
-    }
-
-    this._sendToCharacteristic(this._characteristic, message);
-  }
-
-  _sendToCharacteristic(characteristic, message) {
+  _writeToCharacteristic(characteristic, message) {
     this._logOutcoming(message);
 
     // End of line ('\r\n') added here because without it Chrome not sending
