@@ -1,15 +1,14 @@
-// TODO: Set UUIDs by class methods
-const SERVICE_UUID = 0xFFE0;
-const CHARACTERISTIC_UUID = 0xFFE1;
-
 class BluetoothConnection {
-  constructor() {
+  constructor(serviceUuid, characteristicUuid) {
     this._device = null;
     this._characteristic = null;
 
     this._boundHandleDisconnection = this._handleDisconnection.bind(this);
     this._boundHandleCharacteristicValueChanged =
         this._handleCharacteristicValueChanged.bind(this);
+
+    this._serviceUuid = serviceUuid;
+    this._characteristicUuid = characteristicUuid;
 
     // TODO: Separate UI from model
     this._consoleContainer = document.getElementById('console');
@@ -64,7 +63,7 @@ class BluetoothConnection {
     this._log('Requesting bluetooth device...');
 
     return navigator.bluetooth.requestDevice({
-      filters: [{services: [SERVICE_UUID]}],
+      filters: [{services: [this._serviceUuid]}],
     }).
         then(device => {
           this._log('"' + device.name + '" bluetooth device selected');
@@ -88,12 +87,12 @@ class BluetoothConnection {
         then(server => {
           this._log('GATT server connected', 'Getting service...');
 
-          return server.getPrimaryService(SERVICE_UUID);
+          return server.getPrimaryService(this._serviceUuid);
         }).
         then(service => {
           this._log('Service found', 'Getting characteristic...');
 
-          return service.getCharacteristic(CHARACTERISTIC_UUID);
+          return service.getCharacteristic(this._characteristicUuid);
         }).
         then(characteristic => {
           this._log('Characteristic found');
@@ -189,7 +188,7 @@ class BluetoothConnection {
   }
 }
 
-let connection = new BluetoothConnection();
+let connection = new BluetoothConnection(0xFFE0, 0xFFE1);
 
 let connectButton = document.getElementById('connect');
 let disconnectButton = document.getElementById('disconnect');
