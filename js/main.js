@@ -157,7 +157,7 @@ class BluetoothConnection {
     // TODO: Separate output logic
     this._logToTerminal('< ' + message);
 
-    characteristic.writeValue(this._str2ab(message + '\r\n'));
+    characteristic.writeValue(this.constructor._str2ab(message + '\r\n'));
   }
 
   _log(...messages) {
@@ -176,7 +176,7 @@ class BluetoothConnection {
     this._terminalContainer.insertAdjacentHTML('beforeend', html);
   }
 
-  _str2ab(str) {
+  static _str2ab(str) {
     let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
     let bufView = new Uint8Array(buf);
 
