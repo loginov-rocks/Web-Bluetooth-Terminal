@@ -1,176 +1,206 @@
+// TODO: Set UUIDs by class methods
 const SERVICE_UUID = 0xFFE0;
 const CHARACTERISTIC_UUID = 0xFFE1;
 
+class BluetoothConnection {
+  constructor() {
+    this._device = null;
+    this._characteristic = null;
+
+    this._boundHandleDisconnection = this._handleDisconnection.bind(this);
+    this._boundHandleCharacteristicValueChanged =
+        this._handleCharacteristicValueChanged.bind(this);
+
+    // TODO: Separate UI from model
+    this._consoleContainer = document.getElementById('console');
+    this._terminalContainer = document.getElementById('terminal');
+  }
+
+  connect() {
+    return this._connectToDevice(this._device);
+  }
+
+  disconnect() {
+    this._disconnectFromDevice(this._device);
+
+    if (this._characteristic) {
+      this._characteristic.removeEventListener('characteristicvaluechanged',
+          this._boundHandleDisconnection);
+      this._characteristic = null;
+    }
+
+    this._device = null;
+  }
+
+  _connectToDevice(device) {
+    return (device ? Promise.resolve(device) : this._requestBluetoothDevice()).
+        then(device => this._connectDeviceAndCacheCharacteristic(device)).
+        then(characteristic => this._startNotifications(characteristic)).
+        catch(error => this._log(error));
+  }
+
+  _disconnectFromDevice(device) {
+    if (!device) {
+      return;
+    }
+
+    this._log('Disconnecting from "' + device.name + '" bluetooth device...');
+
+    device.removeEventListener('gattserverdisconnected',
+        this._boundHandleDisconnection);
+
+    if (!device.gatt.connected) {
+      this._log('"' + device.name +
+          '" bluetooth device is already disconnected');
+      return;
+    }
+
+    device.gatt.disconnect();
+
+    this._log('"' + device.name + '" bluetooth device disconnected');
+  }
+
+  _requestBluetoothDevice() {
+    this._log('Requesting bluetooth device...');
+
+    return navigator.bluetooth.requestDevice({
+      filters: [{services: [SERVICE_UUID]}],
+    }).
+        then(device => {
+          this._log('"' + device.name + '" bluetooth device selected');
+
+          this._device = device; // remember device
+          this._device.addEventListener('gattserverdisconnected',
+              this._boundHandleDisconnection);
+
+          return this._device;
+        });
+  }
+
+  _connectDeviceAndCacheCharacteristic(device) {
+    if (device.gatt.connected && this._characteristic) { // check remembered characteristic
+      return Promise.resolve(this._characteristic);
+    }
+
+    this._log('Connecting to GATT server...');
+
+    return device.gatt.connect().
+        then(server => {
+          this._log('GATT server connected', 'Getting service...');
+
+          return server.getPrimaryService(SERVICE_UUID);
+        }).
+        then(service => {
+          this._log('Service found', 'Getting characteristic...');
+
+          return service.getCharacteristic(CHARACTERISTIC_UUID);
+        }).
+        then(characteristic => {
+          this._log('Characteristic found');
+
+          this._characteristic = characteristic; // remember characteristic
+
+          return this._characteristic;
+        });
+  }
+
+  _startNotifications(characteristic) {
+    this._log('Starting notifications...');
+
+    return characteristic.startNotifications().
+        then(() => {
+          this._log('Notifications started');
+
+          characteristic.addEventListener('characteristicvaluechanged',
+              this._boundHandleCharacteristicValueChanged);
+        });
+  }
+
+  _stopNotifications(characteristic) {
+    this._log('Stopping notifications...');
+
+    return characteristic.stopNotifications().
+        then(() => {
+          this._log('Notifications stopped');
+
+          characteristic.removeEventListener('characteristicvaluechanged',
+              this._boundHandleCharacteristicValueChanged);
+        });
+  }
+
+  _handleDisconnection(event) {
+    let device = event.target;
+
+    this._log('"' + device.name +
+        '" bluetooth device disconnected, trying to reconnect...');
+
+    this._connectDeviceAndCacheCharacteristic(device).
+        then(characteristic => this._startNotifications(characteristic)).
+        catch(error => this._log(error));
+  }
+
+  _handleCharacteristicValueChanged(event) {
+    let value = new TextDecoder().decode(event.target.value);
+
+    // TODO: Separate output logic
+    this._logToTerminal('> ' + value);
+  }
+
+  send(message) {
+    if (!this._characteristic) {
+      return;
+    }
+
+    this._sendToCharacteristic(this._characteristic, message);
+  }
+
+  _sendToCharacteristic(characteristic, message) {
+    // TODO: Separate output logic
+    this._logToTerminal('< ' + message);
+
+    characteristic.writeValue(this._str2ab(message + '\r\n'));
+  }
+
+  _log(...messages) {
+    let html = messages.join('<br>') + '<br>';
+
+    messages.forEach(message => console.log(message));
+
+    // TODO: Separate UI from model
+    this._consoleContainer.insertAdjacentHTML('beforeend', html);
+  }
+
+  _logToTerminal(message) {
+    let html = message + '<br>';
+
+    // TODO: Separate UI from model
+    this._terminalContainer.insertAdjacentHTML('beforeend', html);
+  }
+
+  _str2ab(str) {
+    let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+    let bufView = new Uint8Array(buf);
+
+    for (let i = 0, strLen = str.length; i < strLen; i++) {
+      bufView[i] = str.charCodeAt(i);
+    }
+
+    return buf;
+  }
+}
+
+let connection = new BluetoothConnection();
+
 let connectButton = document.getElementById('connect');
 let disconnectButton = document.getElementById('disconnect');
-let consoleContainer = document.getElementById('console');
-let terminalContainer = document.getElementById('terminal');
 let inputField = document.getElementById('input');
 let sendButton = document.getElementById('send');
 
-let bluetoothDevice = null;
-let bluetoothCharacteristic = null;
+connectButton.addEventListener('click', () => connection.connect());
 
-connectButton.addEventListener('click', () => connect(bluetoothDevice));
-
-disconnectButton.addEventListener('click', () => {
-  disconnect(bluetoothDevice);
-
-  if (bluetoothCharacteristic) {
-    bluetoothCharacteristic.removeEventListener('characteristicvaluechanged',
-        handleCharacteristicValueChanged);
-    bluetoothCharacteristic = null;
-  }
-
-  bluetoothDevice = null;
-});
+disconnectButton.addEventListener('click', () => connection.disconnect());
 
 sendButton.addEventListener('click', () => {
-  send(bluetoothCharacteristic, inputField.value);
+  connection.send(inputField.value);
   inputField.value = '';
 });
-
-function connect(device) {
-  return (device ? Promise.resolve(device) : requestBluetoothDevice()).
-      then(connectDeviceAndCacheCharacteristic).
-      then(startNotifications).
-      catch(error => log(error));
-}
-
-function disconnect(device) {
-  if (!device) {
-    return;
-  }
-
-  log('Disconnecting from "' + device.name + '" bluetooth device...');
-
-  device.removeEventListener('gattserverdisconnected', handleDisconnection);
-
-  if (!device.gatt.connected) {
-    log('"' + device.name + '" bluetooth device is already disconnected');
-    return;
-  }
-
-  device.gatt.disconnect();
-
-  log('"' + device.name + '" bluetooth device disconnected');
-}
-
-function requestBluetoothDevice() {
-  log('Requesting bluetooth device...');
-
-  return navigator.bluetooth.requestDevice({
-    filters: [{services: [SERVICE_UUID]}],
-  }).
-      then(device => {
-        log('"' + device.name + '" bluetooth device selected');
-
-        bluetoothDevice = device; // remember device
-        bluetoothDevice.addEventListener('gattserverdisconnected',
-            handleDisconnection);
-
-        return bluetoothDevice;
-      });
-}
-
-function connectDeviceAndCacheCharacteristic(device) {
-  if (device.gatt.connected && bluetoothCharacteristic) { // check remembered characteristic
-    return Promise.resolve(bluetoothCharacteristic);
-  }
-
-  log('Connecting to GATT server...');
-
-  return device.gatt.connect().
-      then(server => {
-        log('GATT server connected', 'Getting service...');
-
-        return server.getPrimaryService(SERVICE_UUID);
-      }).
-      then(service => {
-        log('Service found', 'Getting characteristic...');
-
-        return service.getCharacteristic(CHARACTERISTIC_UUID);
-      }).
-      then(characteristic => {
-        log('Characteristic found');
-
-        bluetoothCharacteristic = characteristic; // remember characteristic
-
-        return bluetoothCharacteristic;
-      });
-}
-
-function startNotifications(characteristic) {
-  log('Starting notifications...');
-
-  return characteristic.startNotifications().
-      then(() => {
-        log('Notifications started');
-
-        characteristic.addEventListener('characteristicvaluechanged',
-            handleCharacteristicValueChanged);
-      });
-}
-
-function stopNotifications(characteristic) {
-  log('Stopping notifications...');
-
-  return characteristic.stopNotifications().
-      then(() => {
-        log('Notifications stopped');
-
-        characteristic.removeEventListener('characteristicvaluechanged',
-            handleCharacteristicValueChanged);
-      });
-}
-
-function handleDisconnection(event) {
-  let device = event.target;
-
-  log('"' + device.name +
-      '" bluetooth device disconnected, trying to reconnect...');
-
-  connectDeviceAndCacheCharacteristic(device).
-      then(startNotifications).
-      catch(error => log(error));
-}
-
-function handleCharacteristicValueChanged(event) {
-  let value = new TextDecoder().decode(event.target.value);
-
-  logToTerminal('> ' + value);
-}
-
-function send(characteristic, message) {
-  if (!characteristic) {
-    return;
-  }
-
-  logToTerminal('< ' + message);
-
-  characteristic.writeValue(str2ab(message + '\r\n'));
-}
-
-function log(...messages) {
-  let html = messages.join('<br>') + '<br>';
-
-  messages.forEach(message => console.log(message));
-  consoleContainer.insertAdjacentHTML('beforeend', html);
-}
-
-function logToTerminal(message) {
-  let html = message + '<br>';
-
-  terminalContainer.insertAdjacentHTML('beforeend', html);
-}
-
-function str2ab(str) {
-  let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-  let bufView = new Uint8Array(buf);
-
-  for (let i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i);
-  }
-
-  return buf;
-}
