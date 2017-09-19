@@ -1,11 +1,13 @@
 // UI elements
 let connectButton = document.getElementById('connect');
 let disconnectButton = document.getElementById('disconnect');
-let inputField = document.getElementById('input');
-let sendButton = document.getElementById('send');
 
+let deviceNameLabel = document.getElementById('device-name');
 let terminalContainer = document.getElementById('terminal');
 let consoleContainer = document.getElementById('console');
+
+let inputField = document.getElementById('input');
+let sendButton = document.getElementById('send');
 
 // Helpers
 function logToTerminal(message) {
@@ -38,11 +40,19 @@ connection._log = function(...messages) {
 };
 
 // Bind event listeners to the UI elements
-connectButton.addEventListener('click', () => connection.connect());
+connectButton.addEventListener('click', function() {
+  connection.connect().
+      then(() => {
+        deviceNameLabel.textContent = connection.getDeviceName();
+      });
+});
 
-disconnectButton.addEventListener('click', () => connection.disconnect());
+disconnectButton.addEventListener('click', function() {
+  connection.disconnect();
+  deviceNameLabel.textContent = '';
+});
 
-sendButton.addEventListener('click', () => {
+sendButton.addEventListener('click', function() {
   send(inputField.value);
   inputField.value = '';
 });

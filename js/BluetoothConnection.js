@@ -93,6 +93,19 @@ class BluetoothConnection {
     // Handle incoming data
   }
 
+  /**
+   * Get the connected device name
+   *
+   * @returns {string}
+   */
+  getDeviceName() {
+    if (!this._device) {
+      return '';
+    }
+
+    return this._device.name;
+  }
+
   _connectToDevice(device) {
     return (device ? Promise.resolve(device) : this._requestBluetoothDevice()).
         then(device => this._connectDeviceAndCacheCharacteristic(device)).
