@@ -1,176 +1,58 @@
-const SERVICE_UUID = 0xFFE0;
-const CHARACTERISTIC_UUID = 0xFFE1;
-
+// UI elements
 let connectButton = document.getElementById('connect');
 let disconnectButton = document.getElementById('disconnect');
-let consoleContainer = document.getElementById('console');
+
+let deviceNameLabel = document.getElementById('device-name');
 let terminalContainer = document.getElementById('terminal');
+let consoleContainer = document.getElementById('console');
+
 let inputField = document.getElementById('input');
 let sendButton = document.getElementById('send');
 
-let bluetoothDevice = null;
-let bluetoothCharacteristic = null;
-
-connectButton.addEventListener('click', () => connect(bluetoothDevice));
-
-disconnectButton.addEventListener('click', () => {
-  disconnect(bluetoothDevice);
-
-  if (bluetoothCharacteristic) {
-    bluetoothCharacteristic.removeEventListener('characteristicvaluechanged',
-        handleCharacteristicValueChanged);
-    bluetoothCharacteristic = null;
-  }
-
-  bluetoothDevice = null;
-});
-
-sendButton.addEventListener('click', () => {
-  send(bluetoothCharacteristic, inputField.value);
-  inputField.value = '';
-});
-
-function connect(device) {
-  return (device ? Promise.resolve(device) : requestBluetoothDevice()).
-      then(connectDeviceAndCacheCharacteristic).
-      then(startNotifications).
-      catch(error => log(error));
-}
-
-function disconnect(device) {
-  if (!device) {
-    return;
-  }
-
-  log('Disconnecting from "' + device.name + '" bluetooth device...');
-
-  device.removeEventListener('gattserverdisconnected', handleDisconnection);
-
-  if (!device.gatt.connected) {
-    log('"' + device.name + '" bluetooth device is already disconnected');
-    return;
-  }
-
-  device.gatt.disconnect();
-
-  log('"' + device.name + '" bluetooth device disconnected');
-}
-
-function requestBluetoothDevice() {
-  log('Requesting bluetooth device...');
-
-  return navigator.bluetooth.requestDevice({
-    filters: [{services: [SERVICE_UUID]}],
-  }).
-      then(device => {
-        log('"' + device.name + '" bluetooth device selected');
-
-        bluetoothDevice = device; // remember device
-        bluetoothDevice.addEventListener('gattserverdisconnected',
-            handleDisconnection);
-
-        return bluetoothDevice;
-      });
-}
-
-function connectDeviceAndCacheCharacteristic(device) {
-  if (device.gatt.connected && bluetoothCharacteristic) { // check remembered characteristic
-    return Promise.resolve(bluetoothCharacteristic);
-  }
-
-  log('Connecting to GATT server...');
-
-  return device.gatt.connect().
-      then(server => {
-        log('GATT server connected', 'Getting service...');
-
-        return server.getPrimaryService(SERVICE_UUID);
-      }).
-      then(service => {
-        log('Service found', 'Getting characteristic...');
-
-        return service.getCharacteristic(CHARACTERISTIC_UUID);
-      }).
-      then(characteristic => {
-        log('Characteristic found');
-
-        bluetoothCharacteristic = characteristic; // remember characteristic
-
-        return bluetoothCharacteristic;
-      });
-}
-
-function startNotifications(characteristic) {
-  log('Starting notifications...');
-
-  return characteristic.startNotifications().
-      then(() => {
-        log('Notifications started');
-
-        characteristic.addEventListener('characteristicvaluechanged',
-            handleCharacteristicValueChanged);
-      });
-}
-
-function stopNotifications(characteristic) {
-  log('Stopping notifications...');
-
-  return characteristic.stopNotifications().
-      then(() => {
-        log('Notifications stopped');
-
-        characteristic.removeEventListener('characteristicvaluechanged',
-            handleCharacteristicValueChanged);
-      });
-}
-
-function handleDisconnection(event) {
-  let device = event.target;
-
-  log('"' + device.name +
-      '" bluetooth device disconnected, trying to reconnect...');
-
-  connectDeviceAndCacheCharacteristic(device).
-      then(startNotifications).
-      catch(error => log(error));
-}
-
-function handleCharacteristicValueChanged(event) {
-  let value = new TextDecoder().decode(event.target.value);
-
-  logToTerminal('> ' + value);
-}
-
-function send(characteristic, message) {
-  if (!characteristic) {
-    return;
-  }
-
-  logToTerminal('< ' + message);
-
-  characteristic.writeValue(str2ab(message + '\r\n'));
-}
-
-function log(...messages) {
-  let html = messages.join('<br>') + '<br>';
-
-  messages.forEach(message => console.log(message));
-  consoleContainer.insertAdjacentHTML('beforeend', html);
-}
-
+// Helpers
 function logToTerminal(message) {
   let html = message + '<br>';
-
   terminalContainer.insertAdjacentHTML('beforeend', html);
 }
 
-function str2ab(str) {
-  let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-  let bufView = new Uint8Array(buf);
+// Create bluetooth connection instance
+let connection = new BluetoothConnection(0xFFE0, 0xFFE1);
 
-  for (let i = 0, strLen = str.length; i < strLen; i++) {
-    bufView[i] = str.charCodeAt(i);
+// Implement own send function to log outcoming data to the terminal element
+function send(data) {
+  if (connection.send(data)) {
+    logToTerminal('< ' + data);
   }
-
-  return buf;
 }
+
+// Override receive method to log incoming data to the terminal element
+connection.receive = function(data) {
+  logToTerminal('> ' + data);
+};
+
+// Override connection's log method to output messages to the console element
+connection._log = function(...messages) {
+  // We cannot use `super._log()` here
+  messages.forEach(message => console.log(message));
+
+  let html = messages.join('<br>') + '<br>';
+  consoleContainer.insertAdjacentHTML('beforeend', html);
+};
+
+// Bind event listeners to the UI elements
+connectButton.addEventListener('click', function() {
+  connection.connect().
+      then(() => {
+        deviceNameLabel.textContent = connection.getDeviceName();
+      });
+});
+
+disconnectButton.addEventListener('click', function() {
+  connection.disconnect();
+  deviceNameLabel.textContent = '';
+});
+
+sendButton.addEventListener('click', function() {
+  send(inputField.value);
+  inputField.value = '';
+});
