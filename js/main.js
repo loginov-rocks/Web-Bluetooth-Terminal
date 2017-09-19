@@ -1,8 +1,28 @@
 class BluetoothConnection {
   constructor(serviceUuid, characteristicUuid) {
+    /**
+     * String representing end of line for output data
+     * @type {string}
+     * @private
+     */
+    _writeEol = '\r\n';
+
+    /**
+     * Character representing end of line for input data
+     * @type {string}
+     * @private
+     */
+    _readEol = '\n';
+
+    /**
+     * Buffer containing not ended input data
+     * @type {string}
+     * @private
+     */
+    _readBuffer = '';
+
     this._device = null;
     this._characteristic = null;
-    this._inputBuffer = '';
 
     this._boundHandleDisconnection = this._handleDisconnection.bind(this);
     this._boundHandleCharacteristicValueChanged =
@@ -143,23 +163,23 @@ class BluetoothConnection {
     let value = new TextDecoder().decode(event.target.value);
 
     for (let c of value) {
-      if (c === '\n') {
-        let data = this._inputBuffer.trim();
-        this._inputBuffer = '';
+      if (c === this._readEol) {
+        let data = this._readBuffer.trim();
+        this._readBuffer = '';
 
         if (data) {
+          this._logIncoming(data);
           this._getData(data);
         }
       }
       else {
-        this._inputBuffer += c;
+        this._readBuffer += c;
       }
     }
   }
 
   _getData(data) {
-    // TODO: Separate output logic
-    this._logToTerminal('> ' + data);
+    // Handle incoming data here
   }
 
   send(message) {
@@ -171,10 +191,13 @@ class BluetoothConnection {
   }
 
   _sendToCharacteristic(characteristic, message) {
-    // TODO: Separate output logic
-    this._logToTerminal('< ' + message);
+    this._logOutcoming(message);
 
-    characteristic.writeValue(this.constructor._str2ab(message + '\r\n'));
+    // End of line ('\r\n') added here because without it Chrome not sending
+    // data appropriately, it is discovered empirically, no documentation
+    // provided, so it can be changed at some time
+    characteristic.writeValue(this.constructor._str2ab(message +
+        this._writeEol));
   }
 
   _log(...messages) {
@@ -184,6 +207,16 @@ class BluetoothConnection {
 
     // TODO: Separate UI from model
     this._consoleContainer.insertAdjacentHTML('beforeend', html);
+  }
+
+  _logIncoming(data) {
+    // TODO: Separate output logic
+    this._logToTerminal('> ' + data);
+  }
+
+  _logOutcoming(data) {
+    // TODO: Separate output logic
+    this._logToTerminal('< ' + data);
   }
 
   _logToTerminal(message) {
