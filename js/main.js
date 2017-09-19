@@ -39,10 +39,6 @@ class BluetoothConnection {
 
     this._serviceUuid = serviceUuid;
     this._characteristicUuid = characteristicUuid;
-
-    // TODO: Separate UI from model
-    this._consoleContainer = document.getElementById('console');
-    this._terminalContainer = document.getElementById('terminal');
   }
 
   /**
@@ -221,29 +217,15 @@ class BluetoothConnection {
   }
 
   _log(...messages) {
-    let html = messages.join('<br>') + '<br>';
-
     messages.forEach(message => console.log(message));
-
-    // TODO: Separate UI from model
-    this._consoleContainer.insertAdjacentHTML('beforeend', html);
   }
 
   _logIncoming(data) {
-    // TODO: Separate output logic
-    this._logToTerminal('> ' + data);
+    console.log('> ' + data);
   }
 
   _logOutcoming(data) {
-    // TODO: Separate output logic
-    this._logToTerminal('< ' + data);
-  }
-
-  _logToTerminal(message) {
-    let html = message + '<br>';
-
-    // TODO: Separate UI from model
-    this._terminalContainer.insertAdjacentHTML('beforeend', html);
+    console.log('< ' + data);
   }
 
   static _str2ab(str) {
@@ -258,7 +240,40 @@ class BluetoothConnection {
   }
 }
 
-let connection = new BluetoothConnection(0xFFE0, 0xFFE1);
+class BluetoothApplication extends BluetoothConnection {
+  constructor(serviceUuid, characteristicUuid) {
+    super(serviceUuid, characteristicUuid);
+
+    this._consoleContainer = document.getElementById('console');
+    this._terminalContainer = document.getElementById('terminal');
+  }
+
+  _log(...messages) {
+    super._log(...messages);
+
+    let html = messages.join('<br>') + '<br>';
+    this._consoleContainer.insertAdjacentHTML('beforeend', html);
+  }
+
+  _logIncoming(data) {
+    super._logIncoming(data);
+
+    this._logToTerminal('> ' + data);
+  }
+
+  _logOutcoming(data) {
+    super._logOutcoming(data);
+
+    this._logToTerminal('< ' + data);
+  }
+
+  _logToTerminal(message) {
+    let html = message + '<br>';
+    this._terminalContainer.insertAdjacentHTML('beforeend', html);
+  }
+}
+
+let connection = new BluetoothApplication(0xFFE0, 0xFFE1);
 
 let connectButton = document.getElementById('connect');
 let disconnectButton = document.getElementById('disconnect');
