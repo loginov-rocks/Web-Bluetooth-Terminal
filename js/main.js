@@ -2,6 +2,7 @@ class BluetoothConnection {
   constructor(serviceUuid, characteristicUuid) {
     this._device = null;
     this._characteristic = null;
+    this._inputBuffer = '';
 
     this._boundHandleDisconnection = this._handleDisconnection.bind(this);
     this._boundHandleCharacteristicValueChanged =
@@ -141,8 +142,24 @@ class BluetoothConnection {
   _handleCharacteristicValueChanged(event) {
     let value = new TextDecoder().decode(event.target.value);
 
+    for (let c of value) {
+      if (c === '\n') {
+        let data = this._inputBuffer.trim();
+        this._inputBuffer = '';
+
+        if (data) {
+          this._getData(data);
+        }
+      }
+      else {
+        this._inputBuffer += c;
+      }
+    }
+  }
+
+  _getData(data) {
     // TODO: Separate output logic
-    this._logToTerminal('> ' + value);
+    this._logToTerminal('> ' + data);
   }
 
   send(message) {
