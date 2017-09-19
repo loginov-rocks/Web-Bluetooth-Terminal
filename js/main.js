@@ -4,6 +4,7 @@
 class BluetoothConnection {
   /**
    * Constructor
+   *
    * @param {number} serviceUuid Service UUID
    * @param {number} characteristicUuid Characteristic UUID
    */
@@ -43,7 +44,9 @@ class BluetoothConnection {
 
   /**
    * Launch bluetooth device selector and connect to the selected device
-   * @returns {Promise}
+   *
+   * @returns {Promise} Promise which will be fulfilled when notifications will
+   *                    be started
    */
   connect() {
     return this._connectToDevice(this._device);
@@ -66,14 +69,28 @@ class BluetoothConnection {
 
   /**
    * Send data to the connected device
-   * @param {string} data
+   *
+   * @param {string} data Data
+   * @returns {boolean} Is sent
    */
   send(data) {
     if (!data || !this._characteristic) {
-      return;
+      return false;
     }
 
     this._writeToCharacteristic(this._characteristic, String(data));
+
+    return true;
+  }
+
+  /**
+   * Data receiving handler which called whenever the new data comes from
+   * the connected device, override this to handle incoming data
+   *
+   * @param {string} data Data
+   */
+  receive(data) {
+    // Handle incoming data
   }
 
   _connectToDevice(device) {
@@ -192,8 +209,7 @@ class BluetoothConnection {
         this._readBuffer = '';
 
         if (data) {
-          this._logIncoming(data);
-          this._getData(data);
+          this.receive(data);
         }
       }
       else {
@@ -202,30 +218,15 @@ class BluetoothConnection {
     }
   }
 
-  _getData(data) {
-    // Handle incoming data here
-  }
-
-  _writeToCharacteristic(characteristic, message) {
-    this._logOutcoming(message);
-
+  _writeToCharacteristic(characteristic, data) {
     // End of line ('\r\n') added here because without it Chrome not sending
     // data appropriately, it is discovered empirically, no documentation
     // provided, so it can be changed at some time
-    characteristic.writeValue(this.constructor._str2ab(message +
-        this._writeEol));
+    characteristic.writeValue(this.constructor._str2ab(data + this._writeEol));
   }
 
   _log(...messages) {
     messages.forEach(message => console.log(message));
-  }
-
-  _logIncoming(data) {
-    console.log('> ' + data);
-  }
-
-  _logOutcoming(data) {
-    console.log('< ' + data);
   }
 
   static _str2ab(str) {
@@ -248,23 +249,21 @@ class BluetoothApplication extends BluetoothConnection {
     this._terminalContainer = document.getElementById('terminal');
   }
 
+  send(data) {
+    if (super.send(data)) {
+      this._logToTerminal('< ' + data);
+    }
+  }
+
+  receive(data) {
+    this._logToTerminal('> ' + data);
+  }
+
   _log(...messages) {
     super._log(...messages);
 
     let html = messages.join('<br>') + '<br>';
     this._consoleContainer.insertAdjacentHTML('beforeend', html);
-  }
-
-  _logIncoming(data) {
-    super._logIncoming(data);
-
-    this._logToTerminal('> ' + data);
-  }
-
-  _logOutcoming(data) {
-    super._logOutcoming(data);
-
-    this._logToTerminal('< ' + data);
   }
 
   _logToTerminal(message) {
