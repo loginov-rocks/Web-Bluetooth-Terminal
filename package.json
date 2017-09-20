@@ -26,10 +26,12 @@
     "cpx": "^1.5.0",
     "node-sass": "^4.5.3",
     "nodemon": "^1.12.1",
-    "normalize.css": "^7.0.0"
+    "normalize.css": "^7.0.0",
+    "sw-toolbox": "^3.6.0"
   },
   "scripts": {
-    "build": "npm run styles:vendor && npm run styles",
+    "build": "npm run js:vendor && npm run styles:vendor && npm run styles",
+    "js:vendor": "cpx node_modules/sw-toolbox/*.js js",
     "styles": "node-sass -o css scss",
     "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
     "watch:styles": "nodemon -e scss -x \"npm run styles\""
