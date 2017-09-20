@@ -1,22 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Web Bluetooth Terminal</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/normalize.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+
 </head>
 <body>
 
-<button id="connect" type="button">Connect</button>
-<button id="disconnect" type="button">Disconnect</button>
+<div class="app">
 
-<div id="device-name"></div>
-<div id="console"></div>
-<div id="terminal"></div>
+    <div class="toolbar">
 
-<div>
-    <input id="input" type="text">
-    <button id="send" type="button">Send</button>
+        <div id="device-name" class="name">Terminal</div>
+
+        <div class="buttons">
+
+            <button id="connect" type="button" aria-label="Connect">
+                <i class="material-icons">bluetooth_connected</i>
+            </button>
+
+            <button id="disconnect" type="button" aria-label="Disconnect">
+                <i class="material-icons">bluetooth_disabled</i>
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="terminal" class="terminal"></div>
+
+    <div class="send-form">
+
+        <input id="input" type="text" aria-label="Input" placeholder="Type something to send...">
+
+        <button id="send" type="button" aria-label="Send">
+            <i class="material-icons">send</i>
+        </button>
+
+    </div>
+
 </div>
 
 <script src="js/BluetoothConnection.js"></script>

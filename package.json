@@ -1,0 +1,37 @@
+{
+  "name": "web-bluetooth-terminal",
+  "version": "0.3.0",
+  "description": "Progressive Web Application for serial communication with Bluetooth Low Energy (Smart) devices",
+  "keywords": [
+    "pwa",
+    "serial",
+    "communication",
+    "bluetooth",
+    "ble",
+    "smart",
+    "iot",
+    "arduino"
+  ],
+  "homepage": "https://1oginov.github.io/Web-Bluetooth-Terminal",
+  "bugs": {
+    "url": "https://github.com/1oginov/Web-Bluetooth-Terminal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1oginov/Web-Bluetooth-Terminal.git"
+  },
+  "license": "MIT",
+  "author": "Danila Loginov <danila@loginov.rocks> (https://loginov.rocks)",
+  "devDependencies": {
+    "cpx": "^1.5.0",
+    "node-sass": "^4.5.3",
+    "nodemon": "^1.12.1",
+    "normalize.css": "^7.0.0"
+  },
+  "scripts": {
+    "build": "npm run styles:vendor && npm run styles",
+    "styles": "node-sass -o css scss",
+    "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
+    "watch:styles": "nodemon -e scss -x \"npm run styles\""
+  }
+}
