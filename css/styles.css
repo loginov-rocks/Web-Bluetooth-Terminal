@@ -1,11 +1,8 @@
-#terminal .debug {
-    color: #9E9E9E;
-}
+#terminal div.debug {
+  color: #9E9E9E; }
 
-#terminal .outcoming {
-    color: #F44336;
-}
+#terminal div.outcoming {
+  color: #F44336; }
 
-#terminal .incoming {
-    color: #2196F3;
-}
+#terminal div.incoming {
+  color: #2196F3; }

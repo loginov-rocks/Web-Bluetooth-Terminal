@@ -1,0 +1,15 @@
+#terminal {
+  div {
+    &.debug {
+      color: #9E9E9E;
+    }
+
+    &.outcoming {
+      color: #F44336;
+    }
+
+    &.incoming {
+      color: #2196F3;
+    }
+  }
+}

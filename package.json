@@ -23,10 +23,13 @@
   "license": "MIT",
   "author": "Danila Loginov <danila@loginov.rocks> (https://loginov.rocks)",
   "devDependencies": {
+    "cpx": "^1.5.0",
+    "node-sass": "^4.5.3",
     "normalize.css": "^7.0.0"
   },
   "scripts": {
-    "build": "npm run styles",
-    "styles": "node scripts/styles.js"
+    "build": "npm run styles:vendor && npm run styles",
+    "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
+    "styles": "node-sass -o css scss"
   }
 }
