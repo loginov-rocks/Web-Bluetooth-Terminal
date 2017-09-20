@@ -1,6 +1,6 @@
 {
   "name": "web-bluetooth-terminal",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Progressive Web Application for serial communication with Bluetooth Low Energy (Smart) devices",
   "keywords": [
     "pwa",
@@ -30,8 +30,8 @@
   },
   "scripts": {
     "build": "npm run styles:vendor && npm run styles",
-    "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
     "styles": "node-sass -o css scss",
+    "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
     "watch:styles": "nodemon -e scss -x \"npm run styles\""
   }
 }
