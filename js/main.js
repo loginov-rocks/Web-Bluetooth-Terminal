@@ -9,8 +9,11 @@ let inputField = document.getElementById('input');
 let sendButton = document.getElementById('send');
 
 // Helpers
-function logToTerminal(message, type = 'debug') {
-  let element = '<div class="' + type + '">' + message + '</div>';
+let defaultDeviceName = 'Terminal';
+
+function logToTerminal(message, type = '') {
+  let element = '<div' + (type ? ' class="' + type + '"' : '') + '>' + message +
+      '</div>';
   terminalContainer.insertAdjacentHTML('beforeend', element);
 }
 
@@ -20,13 +23,13 @@ let connection = new BluetoothConnection(0xFFE0, 0xFFE1);
 // Implement own send function to log outcoming data to the terminal element
 function send(data) {
   if (connection.send(data)) {
-    logToTerminal(data, 'outcoming');
+    logToTerminal(data, 'out');
   }
 }
 
 // Override receive method to log incoming data to the terminal element
 connection.receive = function(data) {
-  logToTerminal(data, 'incoming');
+  logToTerminal(data, 'in');
 };
 
 // Override connection's log method to output messages to the console element
@@ -42,13 +45,14 @@ connection._log = function(...messages) {
 connectButton.addEventListener('click', function() {
   connection.connect().
       then(() => {
-        deviceNameLabel.textContent = connection.getDeviceName();
+        deviceNameLabel.textContent = connection.getDeviceName() ?
+            connection.getDeviceName() : defaultDeviceName;
       });
 });
 
 disconnectButton.addEventListener('click', function() {
   connection.disconnect();
-  deviceNameLabel.textContent = '';
+  deviceNameLabel.textContent = defaultDeviceName;
 });
 
 sendButton.addEventListener('click', function() {
