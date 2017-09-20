@@ -21,5 +21,12 @@
     "url": "https://github.com/1oginov/Web-Bluetooth-Terminal.git"
   },
   "license": "MIT",
-  "author": "Danila Loginov <danila@loginov.rocks> (https://loginov.rocks)"
+  "author": "Danila Loginov <danila@loginov.rocks> (https://loginov.rocks)",
+  "devDependencies": {
+    "normalize.css": "^7.0.0"
+  },
+  "scripts": {
+    "build": "npm run styles",
+    "styles": "node scripts/styles.js"
+  }
 }
