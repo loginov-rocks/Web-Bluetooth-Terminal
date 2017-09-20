@@ -10,11 +10,26 @@ let sendButton = document.getElementById('send');
 
 // Helpers
 let defaultDeviceName = 'Terminal';
+let terminalAutoScrollingLimit = terminalContainer.offsetHeight / 2;
+let isTerminalAutoScrolling = true;
+
+function scrollElement(element) {
+  let scrollTop = element.scrollHeight - element.offsetHeight;
+
+  if (scrollTop > 0) {
+    element.scrollTop = scrollTop;
+  }
+}
 
 function logToTerminal(message, type = '') {
   let element = '<div' + (type ? ' class="' + type + '"' : '') + '>' + message +
       '</div>';
+
   terminalContainer.insertAdjacentHTML('beforeend', element);
+
+  if (isTerminalAutoScrolling) {
+    scrollElement(terminalContainer);
+  }
 }
 
 // Create bluetooth connection instance
@@ -58,4 +73,12 @@ disconnectButton.addEventListener('click', function() {
 sendButton.addEventListener('click', function() {
   send(inputField.value);
   inputField.value = '';
+});
+
+// Switch terminal auto scrolling if it scrolls out of bottom
+terminalContainer.addEventListener('scroll', function() {
+  let scrollTopOffset = terminalContainer.scrollHeight -
+      terminalContainer.offsetHeight - terminalAutoScrollingLimit;
+
+  isTerminalAutoScrolling = (scrollTopOffset < terminalContainer.scrollTop);
 });
