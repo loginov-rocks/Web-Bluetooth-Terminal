@@ -54,7 +54,8 @@ button {
   .terminal div {
     color: #9E9E9E;
     line-height: 1;
-    padding: 4px 8px; }
+    padding: 4px 8px;
+    word-break: break-word; }
     .terminal div.out {
       color: #F44336; }
     .terminal div.in {

@@ -1,12 +1,10 @@
 // UI elements
+let deviceNameLabel = document.getElementById('device-name');
 let connectButton = document.getElementById('connect');
 let disconnectButton = document.getElementById('disconnect');
-
-let deviceNameLabel = document.getElementById('device-name');
 let terminalContainer = document.getElementById('terminal');
-
+let sendForm = document.getElementById('send-form');
 let inputField = document.getElementById('input');
-let sendButton = document.getElementById('send');
 
 // Helpers
 let defaultDeviceName = 'Terminal';
@@ -70,9 +68,13 @@ disconnectButton.addEventListener('click', function() {
   deviceNameLabel.textContent = defaultDeviceName;
 });
 
-sendButton.addEventListener('click', function() {
+sendForm.addEventListener('submit', function(event) {
+  event.preventDefault();
+
   send(inputField.value);
+
   inputField.value = '';
+  inputField.focus();
 });
 
 // Switch terminal auto scrolling if it scrolls out of bottom
