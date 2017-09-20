@@ -25,11 +25,13 @@
   "devDependencies": {
     "cpx": "^1.5.0",
     "node-sass": "^4.5.3",
+    "nodemon": "^1.12.1",
     "normalize.css": "^7.0.0"
   },
   "scripts": {
     "build": "npm run styles:vendor && npm run styles",
     "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
-    "styles": "node-sass -o css scss"
+    "styles": "node-sass -o css scss",
+    "watch:styles": "nodemon -e scss -x \"npm run styles\""
   }
 }
