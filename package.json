@@ -1,0 +1,25 @@
+{
+  "name": "web-bluetooth-terminal",
+  "version": "0.2.0",
+  "description": "Progressive Web Application for serial communication with Bluetooth Low Energy (Smart) devices",
+  "keywords": [
+    "pwa",
+    "serial",
+    "communication",
+    "bluetooth",
+    "ble",
+    "smart",
+    "iot",
+    "arduino"
+  ],
+  "homepage": "https://1oginov.github.io/Web-Bluetooth-Terminal",
+  "bugs": {
+    "url": "https://github.com/1oginov/Web-Bluetooth-Terminal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1oginov/Web-Bluetooth-Terminal.git"
+  },
+  "license": "MIT",
+  "author": "Danila Loginov <danila@loginov.rocks> (https://loginov.rocks)"
+}
