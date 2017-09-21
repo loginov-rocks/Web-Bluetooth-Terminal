@@ -3,7 +3,8 @@
 [![devDependencies Status](https://david-dm.org/1oginov/Web-Bluetooth-Terminal/dev-status.svg)](https://david-dm.org/1oginov/Web-Bluetooth-Terminal?type=dev)
 
 ![Favicon](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/master/icons/favicon-16x16.png)
-[https://1oginov.github.io/Web-Bluetooth-Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) — try it out!
+[https://1oginov.github.io/Web-Bluetooth-Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) — try it out or
+see how it works on [YouTube](https://www.youtube.com/watch?v=BNXN_931W_M).
 
 Web Bluetooth Terminal is a website that can **connect** with the remote devices supporting **Bluetooth Low Energy**
 (also called Bluetooth Smart) and **exchange data bidirectionally**. It can be installed on your homescreen as an
@@ -12,15 +13,15 @@ application and work offline.
 **Killer feature:** the application establishes **serial communication** over BLE that is not provided by the
 specification, but needed if you want to make your own BLE IoT devices using affordable bluetooth modules.
 
-![Teaser](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/dev/misc/Teaser.png)
+![Teaser](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/master/misc/Teaser.png)
 
-The application utilises BLE service (0xFFE0) and characteristic (0xFFE1) available in low cost BLE modules based for
-example on CC2541 chip, such as HM-10, JDY-08, AT-09, CC41-A and other. Also, it bypasses 20 bytes limit specific for
-mentioned characteristic by keeping incoming messages in a buffer and waiting for the end of line characters.
+The application utilises BLE service (`0xFFE0`) and characteristic (`0xFFE1`) available in low cost BLE modules based
+for example on CC2541 chip, such as HM-10, JDY-08, AT-09, CC41-A and other. Also, it bypasses 20 bytes limit specific
+for mentioned characteristic by keeping incoming messages in a buffer and waiting for the end of line characters.
 
 Check [Bluetooth Low Energy (Smart) device](#bluetooth-low-energy-smart-device) and
 [How to use this app as a base for my own project or to contribute?](#how-to-use-this-app-as-a-base-for-my-own-project-or-to-contribute)
-sections for a quick start and to make your own project. Also, I've made
+sections for a quick start and to find out how to make your own project. Also, I've made
 [MeArm Controller](https://github.com/1oginov/MeArm-Controller) as a showcase project.
 
 ## Features
@@ -28,14 +29,14 @@ sections for a quick start and to make your own project. Also, I've made
 **Accessible via browser** — just go to the [website](https://1oginov.github.io/Web-Bluetooth-Terminal/) and you'll get
 the full-featured application, it is not needed to install anything.
 
-**Cross-platform** — as long as the app is accessible via browser, you can use it with the desktop or with the
-smart phone browser.
+**Cross-platform** — as long as the app is accessible via browser, you can use it with the desktop or with the smart
+phone [browser](#browser).
 
 **Installable** — if you don't want to remember the website address, you can add it to the homescreen.
 
 **Works offline** after installation on your homescreen, because it is Progressive Web Application.
 
-And.. it have **auto scrolling!** Enabled by default, but you can scroll the terminal to the top on more than a half of
+And... it have **auto scrolling!** Enabled by default, but you can scroll the terminal to the top on more than a half of
 the terminal's window height to disable it. Scroll to the bottom to enable it again. Rocket science!
 
 ## Requirements
@@ -59,17 +60,40 @@ capabilities ([Web App Manifest](http://caniuse.com/#feat=web-app-manifest) and
 
 Different BLE devices implements their own services and characteristics to communicate with, but you can build your own
 simple device: you just need a BLE module (e.g. HM-10, JDY-08, AT-09, CC41-A) and an Arduino Uno. Wire it and upload the
-[bridge sketch](https://github.com/1oginov/Web-Bluetooth-Terminal/tree/master/misc/Arduino-Bridge/Arduino-Bridge.ino).
+[bridge sketch](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/master/misc/Arduino-Bridge/Arduino-Bridge.ino).
 
-![Arduino Uno to BLE module bridge scheme](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/dev/misc/Arduino-Bridge/Scheme.png)
+Pay attention to what voltage level your BLE module consuming, since this can vary from device to device! Read a
+specifications, you may need to connect your BLE module to the `3.3V` pin and use voltage level shifter between `TX` and
+`RX` pins.
+
+![Arduino Uno to BLE module wiring scheme](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/master/misc/Arduino-Bridge/Scheme.png)
 
 Open the Serial Monitor in Arduino IDE, switch baudrate to `9600` and line endings to `Both NL & CR`. Next, launch the
-[Web Bluetooth Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) and connect to your device. Now you're able
-to make small talk between Terminal to the Serial Monitor!
+[Web Bluetooth Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) and connect to your module. Now you're able
+to make small talk between the Terminal and the Serial Monitor!
+
+#### BLE module configuration
+
+When the BLE module is waiting for connection it can be configured with `AT` commands. So if you have troubles trying to
+make BLE module work as expected you can use following commands, but again, read a specifications! Here are some
+commands that I use with CC41-A module:
+
+* `AT+DEFAULT` — resets the module to the defaults;
+* `AT+RESET` — resets the module softly;
+* `AT+ROLE` — get the module's working mode;
+* `AT+ROLE0` — makes the module to work in slave mode, waiting for connection from other devices;
+* `AT+NAME` — gets the module's name;
+* `AT+NAMESimon` — sets the module's name to `Simon`;
+* `AT+PIN` — gets the module's pin (password);
+* `AT+PIN123456` — sets the module's pin to `123456`;
+* `AT+UUID` — gets the module's service UUID;
+* `AT+CHAR` — gets the module's characteristic UUID.
+
+Commands can be case insensitive and may needs to be terminated with `CR` (`\r`) and `LF` (`\n`).
 
 ## How to use this app as a base for my own project or to contribute?
 
-You can fork this repository and implement features specific to your needs. Don't forget, that application needs to be
+You can fork this repository and implement features specific to your needs. Don't forget that application should be
 accessible via HTTPS protocol to enable Web Bluetooth API feature, so you can use
 [GitHub Pages](https://pages.github.com/) switching the source to the `master` branch for your repository.
 
