@@ -60,7 +60,7 @@ class BluetoothConnection {
 
     if (this._characteristic) {
       this._characteristic.removeEventListener('characteristicvaluechanged',
-          this._boundHandleDisconnection);
+          this._boundHandleCharacteristicValueChanged);
       this._characteristic = null;
     }
 
