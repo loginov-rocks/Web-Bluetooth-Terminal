@@ -235,21 +235,12 @@ class BluetoothConnection {
     // End of line ('\r\n') added here because without it Chrome not sending
     // data appropriately, it is discovered empirically, no documentation
     // provided, so it can be changed at some time
-    characteristic.writeValue(this.constructor._str2ab(data + this._writeEol));
+    let value = new TextEncoder().encode(data + this._writeEol);
+
+    characteristic.writeValue(value);
   }
 
   _log(...messages) {
     messages.forEach(message => console.log(message));
-  }
-
-  static _str2ab(str) {
-    let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-    let bufView = new Uint8Array(buf);
-
-    for (let i = 0, strLen = str.length; i < strLen; i++) {
-      bufView[i] = str.charCodeAt(i);
-    }
-
-    return buf;
   }
 }
