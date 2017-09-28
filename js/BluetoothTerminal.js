@@ -1,7 +1,7 @@
 /**
- * BluetoothConnection class
+ * BluetoothTerminal class
  */
-class BluetoothConnection {
+class BluetoothTerminal {
   /**
    * Constructor
    *
