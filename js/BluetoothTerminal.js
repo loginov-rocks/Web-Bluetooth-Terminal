@@ -1,7 +1,7 @@
 /**
- * BluetoothConnection class
+ * BluetoothTerminal class
  */
-class BluetoothConnection {
+class BluetoothTerminal {
   /**
    * Constructor
    *
@@ -14,7 +14,7 @@ class BluetoothConnection {
      * @type {string}
      * @private
      */
-    this._writeEol = '\r\n';
+    this._writeEol = '\n';
 
     /**
      * Character representing end of line for input data
@@ -29,6 +29,20 @@ class BluetoothConnection {
      * @private
      */
     this._readBuffer = '';
+
+    /**
+     * Max characteristic value length
+     * @type {number}
+     * @private
+     */
+    this._maxCharacteristicValueLength = 20;
+
+    /**
+     * Write to characteristic delay
+     * @type {number}
+     * @private
+     */
+    this._writeToCharacteristicDelay = 100;
 
     this._device = null; // device object cache
     this._characteristic = null; // characteristic object cache
@@ -60,7 +74,7 @@ class BluetoothConnection {
 
     if (this._characteristic) {
       this._characteristic.removeEventListener('characteristicvaluechanged',
-          this._boundHandleDisconnection);
+          this._boundHandleCharacteristicValueChanged);
       this._characteristic = null;
     }
 
@@ -74,11 +88,29 @@ class BluetoothConnection {
    * @returns {boolean} Is sent
    */
   send(data) {
+    data = String(data);
+
     if (!data || !this._characteristic) {
       return false;
     }
 
-    this._writeToCharacteristic(this._characteristic, String(data));
+    data += this._writeEol;
+
+    if (data.length > this._maxCharacteristicValueLength) {
+      let chunks = this.constructor._splitByLength(data,
+          this._maxCharacteristicValueLength);
+
+      this._writeToCharacteristic(this._characteristic, chunks[0]);
+
+      for (let i = 1; i < chunks.length; i++) {
+        setTimeout(() => {
+          this._writeToCharacteristic(this._characteristic, chunks[i]);
+        }, i * this._writeToCharacteristicDelay);
+      }
+    }
+    else {
+      this._writeToCharacteristic(this._characteristic, data);
+    }
 
     return true;
   }
@@ -232,24 +264,14 @@ class BluetoothConnection {
   }
 
   _writeToCharacteristic(characteristic, data) {
-    // End of line ('\r\n') added here because without it Chrome not sending
-    // data appropriately, it is discovered empirically, no documentation
-    // provided, so it can be changed at some time
-    characteristic.writeValue(this.constructor._str2ab(data + this._writeEol));
+    characteristic.writeValue(new TextEncoder().encode(data));
   }
 
   _log(...messages) {
     messages.forEach(message => console.log(message));
   }
 
-  static _str2ab(str) {
-    let buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-    let bufView = new Uint8Array(buf);
-
-    for (let i = 0, strLen = str.length; i < strLen; i++) {
-      bufView[i] = str.charCodeAt(i);
-    }
-
-    return buf;
+  static _splitByLength(string, length) {
+    return string.match(new RegExp('(.|[\r\n]){1,' + length + '}', 'g'));
   }
 }

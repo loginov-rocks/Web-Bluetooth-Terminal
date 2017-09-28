@@ -1,6 +1,6 @@
 {
   "name": "web-bluetooth-terminal",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Progressive Web Application for serial communication with Bluetooth Low Energy (Smart) devices",
   "keywords": [
     "pwa",
@@ -23,6 +23,7 @@
   "license": "MIT",
   "author": "Danila Loginov <danila@loginov.rocks> (https://loginov.rocks)",
   "devDependencies": {
+    "bluetooth-terminal": "^1.0.0",
     "cpx": "^1.5.0",
     "node-sass": "^4.5.3",
     "nodemon": "^1.12.1",
@@ -31,7 +32,7 @@
   },
   "scripts": {
     "build": "npm run js:vendor && npm run styles:vendor && npm run styles",
-    "js:vendor": "cpx node_modules/sw-toolbox/*.js js",
+    "js:vendor": "cpx node_modules/sw-toolbox/*.js js && cpx node_modules/bluetooth-terminal/*.js js",
     "styles": "node-sass -o css scss",
     "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
     "watch:styles": "nodemon -e scss -x \"npm run styles\""

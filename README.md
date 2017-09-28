@@ -119,32 +119,32 @@ After installing `npm` dependencies, you can use some simple scripts that can be
 * `npm run watch:styles` watches for changes made to the files located in the `scss` directory and runs `npm run styles`
 command.
 
-### BluetoothConnection.js API
+### BluetoothTerminal.js API
 
-Also, you can simply
-[download the file](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/master/js/BluetoothConnection.js)
-containing `BluetoothConnection` class written in ES6 and use it as you want. Here is a simple code snippet that can be
+Also, you can install [bluetooth-terminal](https://github.com/1oginov/bluetooth-terminal) package or
+[directly download the file](https://raw.githubusercontent.com/1oginov/bluetooth-terminal/master/BluetoothTerminal.js)
+containing `BluetoothTerminal` class written in ES6 and use it as you want. Here is a simple code snippet that can be
 helpful:
 
 ```javascript
 // Pass service and characteristic UUIDs to the constructor to obtain configured instance
-let connection = new BluetoothConnection(0xFFE0, 0xFFE1);
+let terminal = new BluetoothTerminal(0xFFE0, 0xFFE1);
 
 // Override `receive` method to handle incoming data as you want
-connection.receive = function(data) {
+terminal.receive = function(data) {
   console.log('Data coming!', data);
 };
 
 // Request the device for connection and get its name after successful connection
-connection.connect().then(() => {
-  console.log(connection.getDeviceName() + ' is connected!');
+terminal.connect().then(() => {
+  console.log(terminal.getDeviceName() + ' is connected!');
 });
 
 // Send something to the connected device
-connection.send('Simon says: Hello, world!');
+terminal.send('Simon says: Hello, world!');
 
 // Disconnect from the connected device
-connection.disconnect();
+terminal.disconnect();
 ```
 
 ## Reference
