@@ -14,7 +14,7 @@ class BluetoothConnection {
      * @type {string}
      * @private
      */
-    this._writeEol = '\r\n';
+    this._writeEol = '\n';
 
     /**
      * Character representing end of line for input data
