@@ -2,11 +2,12 @@
 
 [![devDependencies Status](https://david-dm.org/1oginov/Web-Bluetooth-Terminal/dev-status.svg)](https://david-dm.org/1oginov/Web-Bluetooth-Terminal?type=dev)
 
-![Favicon](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/master/icons/favicon-16x16.png)
-[https://1oginov.github.io/Web-Bluetooth-Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) — try it out or
-see how it works on [YouTube](https://www.youtube.com/watch?v=BNXN_931W_M).
+![Favicon](https://1oginov.github.io/Web-Bluetooth-Terminal/icons/favicon-16x16.png)
+[https://1oginov.github.io/Web-Bluetooth-Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) — try it out,
+see how it works on [YouTube](https://www.youtube.com/watch?v=BNXN_931W_M) or read tutorial on
+[Habrahabr](https://habrahabr.ru/post/339146/)
 
-Web Bluetooth Terminal is a website that can **connect** with the remote devices supporting **Bluetooth Low Energy**
+Web Bluetooth Terminal is a website that can **connect** with the remote devices which support **Bluetooth Low Energy**
 (also called Bluetooth Smart) and **exchange data bidirectionally**. It can be installed on your homescreen as an
 application and work offline.
 
@@ -17,7 +18,7 @@ specification, but needed if you want to make your own BLE IoT devices using aff
 
 The application utilises BLE service (`0xFFE0`) and characteristic (`0xFFE1`) available in low cost BLE modules based
 for example on CC2541 chip, such as HM-10, JDY-08, AT-09, CC41-A and other. Also, it bypasses 20 bytes limit specific
-for mentioned characteristic by keeping incoming messages in a buffer and waiting for the end of line characters.
+for GATT characteristics by keeping incoming messages in a buffer and waiting for the end of line characters.
 
 Check [Bluetooth Low Energy (Smart) device](#bluetooth-low-energy-smart-device) and
 [How to use this app as a base for my own project or to contribute?](#how-to-use-this-app-as-a-base-for-my-own-project-or-to-contribute)
@@ -124,20 +125,20 @@ command.
 Also, you can install [bluetooth-terminal](https://github.com/1oginov/bluetooth-terminal) package or
 [directly download the file](https://raw.githubusercontent.com/1oginov/bluetooth-terminal/master/BluetoothTerminal.js)
 containing `BluetoothTerminal` class written in ES6 and use it as you want. Here is a simple code snippet that can be
-helpful:
+helpful for a quick start:
 
 ```javascript
-// Pass service and characteristic UUIDs to the constructor to obtain configured instance
-let terminal = new BluetoothTerminal(0xFFE0, 0xFFE1);
+// Obtain configured instance
+let terminal = new BluetoothTeminal();
 
 // Override `receive` method to handle incoming data as you want
 terminal.receive = function(data) {
-  console.log('Data coming!', data);
+  alert(data);
 };
 
 // Request the device for connection and get its name after successful connection
 terminal.connect().then(() => {
-  console.log(terminal.getDeviceName() + ' is connected!');
+  alert(terminal.getDeviceName() + ' is connected!');
 });
 
 // Send something to the connected device

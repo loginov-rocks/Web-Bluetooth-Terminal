@@ -1,6 +1,6 @@
 {
   "name": "web-bluetooth-terminal",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Progressive Web Application for serial communication with Bluetooth Low Energy (Smart) devices",
   "keywords": [
     "pwa",
@@ -23,7 +23,7 @@
   "license": "MIT",
   "author": "Danila Loginov <danila@loginov.rocks> (https://loginov.rocks)",
   "devDependencies": {
-    "bluetooth-terminal": "^1.0.0",
+    "bluetooth-terminal": "^1.1.0",
     "cpx": "^1.5.0",
     "node-sass": "^4.5.3",
     "nodemon": "^1.12.1",

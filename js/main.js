@@ -30,29 +30,29 @@ function logToTerminal(message, type = '') {
   }
 }
 
-// Create bluetooth connection instance
-let terminal = new BluetoothTerminal(0xFFE0, 0xFFE1);
+// Obtain configured Bluetooth Terminal instance
+let terminal = new BluetoothTerminal();
 
-// Implement own send function to log outcoming data to the terminal element
-function send(data) {
-  if (terminal.send(data)) {
-    logToTerminal(data, 'out');
-  }
-}
-
-// Override receive method to log incoming data to the terminal element
+// Override `receive` method to log incoming data to the terminal
 terminal.receive = function(data) {
   logToTerminal(data, 'in');
 };
 
-// Override connection's log method to output messages to the console element
+// Override default log method to output messages to the terminal and console
 terminal._log = function(...messages) {
   // We cannot use `super._log()` here
   messages.forEach(message => {
-    console.log(message);
     logToTerminal(message);
+    console.log(message);
   });
 };
+
+// Implement own send function to log outcoming data to the terminal
+function send(data) {
+  terminal.send(data).
+      then(() => logToTerminal(data, 'out')).
+      catch(error => logToTerminal(error));
+}
 
 // Bind event listeners to the UI elements
 connectButton.addEventListener('click', function() {
