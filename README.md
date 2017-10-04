@@ -5,7 +5,7 @@
 ![Favicon](https://1oginov.github.io/Web-Bluetooth-Terminal/icons/favicon-16x16.png)
 [https://1oginov.github.io/Web-Bluetooth-Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) — try it out,
 see how it works on [YouTube](https://www.youtube.com/watch?v=BNXN_931W_M) or read tutorial on
-[Habrahabr](https://habrahabr.ru/post/339146/) (in Russian).
+[Habrahabr](https://habrahabr.ru/post/339146/)
 
 Web Bluetooth Terminal is a website that can **connect** with the remote devices which support **Bluetooth Low Energy**
 (also called Bluetooth Smart) and **exchange data bidirectionally**. It can be installed on your homescreen as an
