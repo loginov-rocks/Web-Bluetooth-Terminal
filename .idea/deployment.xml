@@ -5,11 +5,8 @@
       <paths name="loginov-rocks-wbt">
         <serverdata>
           <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$" web="/wbt" />
+            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/node_modules" />
-          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

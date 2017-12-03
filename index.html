@@ -29,43 +29,43 @@
 </head>
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <div class="toolbar">
+        <div class="toolbar">
 
-        <div id="device-name" class="name">Terminal</div>
+            <div id="device-name" class="name">Terminal</div>
 
-        <div class="buttons">
+            <div class="buttons">
 
-            <button id="connect" type="button" aria-label="Connect">
-                <i class="material-icons">bluetooth_connected</i>
-            </button>
+                <button id="connect" type="button" aria-label="Connect">
+                    <i class="material-icons">bluetooth_connected</i>
+                </button>
 
-            <button id="disconnect" type="button" aria-label="Disconnect">
-                <i class="material-icons">bluetooth_disabled</i>
-            </button>
+                <button id="disconnect" type="button" aria-label="Disconnect">
+                    <i class="material-icons">bluetooth_disabled</i>
+                </button>
+
+            </div>
 
         </div>
 
+        <div id="terminal" class="terminal"></div>
+
+        <form id="send-form" class="send-form">
+
+            <input id="input" type="text" aria-label="Input" autocomplete="off" placeholder="Type something to send...">
+
+            <button type="submit" aria-label="Send">
+                <i class="material-icons">send</i>
+            </button>
+
+        </form>
+
     </div>
 
-    <div id="terminal" class="terminal"></div>
-
-    <form id="send-form" class="send-form">
-
-        <input id="input" type="text" aria-label="Input" autocomplete="off" placeholder="Type something to send...">
-
-        <button type="submit" aria-label="Send">
-            <i class="material-icons">send</i>
-        </button>
-
-    </form>
-
-</div>
-
-<script src="js/BluetoothTerminal.js"></script>
-<script src="js/main.js"></script>
-<script src="js/companion.js" data-service-worker="sw.js"></script>
+    <script src="js/BluetoothTerminal.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/companion.js" data-service-worker="sw.js"></script>
 
 </body>
 </html>
