@@ -7,7 +7,7 @@
   "scope": "./",
   "name": "Web Bluetooth Terminal",
   "short_name": "Web Terminal",
-  "description": "Progressive Web Application for serial communication with Bluetooth Low Energy (Smart) devices",
+  "description": "Progressive Web Application for serial communication with your own Bluetooth Low Energy (Smart) devices",
   "theme_color": "#2196f3",
   "background_color": "#ffffff",
   "icons": [

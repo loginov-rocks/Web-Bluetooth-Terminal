@@ -1,40 +1,50 @@
 {
   "name": "web-bluetooth-terminal",
-  "version": "1.1.2",
-  "description": "Progressive Web Application for serial communication with Bluetooth Low Energy (Smart) devices",
-  "keywords": [
-    "pwa",
-    "serial",
-    "communication",
-    "bluetooth",
-    "ble",
-    "smart",
-    "iot",
-    "arduino"
-  ],
-  "homepage": "https://1oginov.github.io/Web-Bluetooth-Terminal",
-  "bugs": {
-    "url": "https://github.com/1oginov/Web-Bluetooth-Terminal/issues"
+  "version": "1.2.0",
+  "description": "Progressive Web Application for serial communication with your own Bluetooth Low Energy (Smart) devices",
+  "bin": "./cli.js",
+  "scripts": {
+    "build": "npm run js:vendor && npm run styles:vendor && npm run styles",
+    "js:vendor": "cpx node_modules/sw-toolbox/*.js js && cpx node_modules/bluetooth-terminal/*.js js",
+    "lint": "eslint ./cli.js ./sw.js ./js/main.js",
+    "styles": "node-sass -o css scss",
+    "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
+    "watch:styles": "nodemon -e scss -x \"npm run styles\""
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/1oginov/Web-Bluetooth-Terminal.git"
   },
-  "license": "MIT",
+  "keywords": [
+    "arduino",
+    "ble",
+    "bluetooth",
+    "bluetooth-low-energy",
+    "bluetooth-smart",
+    "communication",
+    "iot",
+    "physical-web",
+    "pwa",
+    "terminal",
+    "serial"
+  ],
   "author": "Danila Loginov <danila@loginov.rocks> (https://loginov.rocks)",
-  "devDependencies": {
-    "bluetooth-terminal": "^1.2.3",
-    "cpx": "^1.5.0",
-    "node-sass": "^4.7.2",
-    "nodemon": "^1.12.1",
-    "normalize.css": "^7.0.0",
-    "sw-toolbox": "^3.6.0"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/1oginov/Web-Bluetooth-Terminal/issues"
   },
-  "scripts": {
-    "build": "npm run js:vendor && npm run styles:vendor && npm run styles",
-    "js:vendor": "cpx node_modules/sw-toolbox/*.js js && cpx node_modules/bluetooth-terminal/*.js js",
-    "styles": "node-sass -o css scss",
-    "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
-    "watch:styles": "nodemon -e scss -x \"npm run styles\""
+  "homepage": "https://1oginov.github.io/Web-Bluetooth-Terminal",
+  "dependencies": {
+    "git-clone": "^0.1.0"
+  },
+  "devDependencies": {
+    "bluetooth-terminal": "^1.2.5",
+    "cpx": "^1.5.0",
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1",
+    "node-sass": "^4.8.3",
+    "nodemon": "^1.17.3",
+    "normalize.css": "^8.0.0",
+    "sw-toolbox": "^3.6.0"
   }
 }
