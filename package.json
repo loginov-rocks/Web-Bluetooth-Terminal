@@ -2,10 +2,11 @@
   "name": "web-bluetooth-terminal",
   "version": "1.2.0",
   "description": "Progressive Web Application for serial communication with your own Bluetooth Low Energy (Smart) devices",
+  "bin": "./cli.js",
   "scripts": {
     "build": "npm run js:vendor && npm run styles:vendor && npm run styles",
     "js:vendor": "cpx node_modules/sw-toolbox/*.js js && cpx node_modules/bluetooth-terminal/*.js js",
-    "lint": "eslint ./js/main.js ./sw.js",
+    "lint": "eslint ./cli.js ./sw.js ./js/main.js",
     "styles": "node-sass -o css scss",
     "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
     "watch:styles": "nodemon -e scss -x \"npm run styles\""
@@ -33,6 +34,9 @@
     "url": "https://github.com/1oginov/Web-Bluetooth-Terminal/issues"
   },
   "homepage": "https://1oginov.github.io/Web-Bluetooth-Terminal",
+  "dependencies": {
+    "git-clone": "^0.1.0"
+  },
   "devDependencies": {
     "bluetooth-terminal": "^1.2.5",
     "cpx": "^1.5.0",
