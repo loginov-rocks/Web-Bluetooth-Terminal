@@ -1,0 +1,15 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "google"
+  ],
+  "globals": {
+    "BluetoothTerminal": true,
+    "importScripts": true,
+    "toolbox": true
+  }
+}
