@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="test-server">
+    <serverData>
+      <paths name="test-server">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
+            <excludedPath local="true" path="$PROJECT_DIR$/misc" />
+            <excludedPath local="true" path="$PROJECT_DIR$/node_modules" />
+            <excludedPath local="true" path="$PROJECT_DIR$/scss" />
+            <excludedPath local="true" path="$PROJECT_DIR$/.eslintrc.json" />
+            <excludedPath local="true" path="$PROJECT_DIR$/.gitignore" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cli.js" />
+            <excludedPath local="true" path="$PROJECT_DIR$/package.json" />
+            <excludedPath local="true" path="$PROJECT_DIR$/package-lock.json" />
+            <excludedPath path="/.idea" />
+            <excludedPath path="/misc" />
+            <excludedPath path="/node_modules" />
+            <excludedPath path="/scss" />
+            <excludedPath path="/.eslintrc.json" />
+            <excludedPath path="/.gitignore" />
+            <excludedPath path="/cli.js" />
+            <excludedPath path="/package.json" />
+            <excludedPath path="/package-lock.json" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
