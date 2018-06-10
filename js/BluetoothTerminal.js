@@ -180,6 +180,31 @@ class BluetoothTerminal {
   }
 
   /**
+   * Send raw byte data to the connected device.
+   * @param {string} data - Data. Must be an Uint8Array.
+   * @return {Promise} Promise which will be fulfilled when data will be sent or
+   *                   rejected if something went wrong
+   */
+  sendBytes(data) {
+    // Return rejected promise immediately if data is empty.
+    if (!data) {
+      return Promise.reject('Data must be not empty');
+    }
+
+    // Return rejected promise immediately if data is not an Uint8Array.
+    if (!(data instanceof Uint8Array)) {
+      throw new Error('Data type is not an Uint8Array');
+    }
+
+    // Return rejected promise immediately if there is no connected device.
+    if (!this._characteristic) {
+      return Promise.reject('There is no connected device');
+    }
+
+    return this._characteristic.writeValue(data);
+  }
+
+  /**
    * Get the connected device name.
    * @return {string} Device name or empty string if not connected
    */
