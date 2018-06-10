@@ -193,7 +193,7 @@ class BluetoothTerminal {
 
     // Return rejected promise immediately if data is not an Uint8Array.
     if (!(data instanceof Uint8Array)) {
-      throw new Error('Data type is not an Uint8Array');
+      return Promise.reject('Data type is not an Uint8Array');
     }
 
     // Return rejected promise immediately if there is no connected device.
