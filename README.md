@@ -1,12 +1,14 @@
 # Web Bluetooth Terminal
 
+[![NpmVersion](https://img.shields.io/npm/v/web-bluetooth-terminal.svg)](https://www.npmjs.com/package/web-bluetooth-terminal)
 [![dependencies Status](https://david-dm.org/1oginov/Web-Bluetooth-Terminal/status.svg)](https://david-dm.org/1oginov/Web-Bluetooth-Terminal)
 [![devDependencies Status](https://david-dm.org/1oginov/Web-Bluetooth-Terminal/dev-status.svg)](https://david-dm.org/1oginov/Web-Bluetooth-Terminal?type=dev)
 
 ![Favicon](https://1oginov.github.io/Web-Bluetooth-Terminal/icons/favicon-16x16.png)
 [https://1oginov.github.io/Web-Bluetooth-Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) — try it out,
-see how it works on [YouTube](https://www.youtube.com/watch?v=BNXN_931W_M) or read tutorial on
-[Habrahabr](https://habrahabr.ru/post/339146/)
+see how it works on [YouTube](https://www.youtube.com/watch?v=BNXN_931W_M), read tutorial on
+[Medium](https://medium.com/@1oginov/how-to-make-a-web-app-for-your-own-bluetooth-low-energy-device-arduino-2af8d16fdbe8)
+(English) or on [Habr](https://habr.com/post/339146/) (Russian).
 
 Web Bluetooth Terminal is a website that can **connect** with the remote devices which support **Bluetooth Low Energy**
 (also called Bluetooth Smart) and **exchange data bidirectionally**. It can be installed on your homescreen as an
