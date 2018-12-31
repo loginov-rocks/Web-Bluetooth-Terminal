@@ -4,7 +4,7 @@
     <HTMLCodeStyleSettings>
       <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="html" />
     </HTMLCodeStyleSettings>
-    <JSCodeStyleSettings>
+    <JSCodeStyleSettings version="0">
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
       <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
       <option name="USE_DOUBLE_QUOTES" value="false" />

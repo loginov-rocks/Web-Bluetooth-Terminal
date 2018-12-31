@@ -1,5 +1,5 @@
 /**
- * https://github.com/1oginov/Web-Bluetooth-Terminal/tree/master/misc/Arduino-Bridge/Arduino-Bridge.ino
+ * https://github.com/loginov-rocks/Web-Bluetooth-Terminal/tree/master/misc/Arduino-Bridge/Arduino-Bridge.ino
  *
  * Wire HM-10 bluetooth module to the Arduino Uno:
  * RX  - 3

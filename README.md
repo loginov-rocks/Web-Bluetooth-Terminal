@@ -1,13 +1,13 @@
 # Web Bluetooth Terminal
 
 [![NpmVersion](https://img.shields.io/npm/v/web-bluetooth-terminal.svg)](https://www.npmjs.com/package/web-bluetooth-terminal)
-[![dependencies Status](https://david-dm.org/1oginov/Web-Bluetooth-Terminal/status.svg)](https://david-dm.org/1oginov/Web-Bluetooth-Terminal)
-[![devDependencies Status](https://david-dm.org/1oginov/Web-Bluetooth-Terminal/dev-status.svg)](https://david-dm.org/1oginov/Web-Bluetooth-Terminal?type=dev)
+[![dependencies Status](https://david-dm.org/loginov-rocks/Web-Bluetooth-Terminal/status.svg)](https://david-dm.org/loginov-rocks/Web-Bluetooth-Terminal)
+[![devDependencies Status](https://david-dm.org/loginov-rocks/Web-Bluetooth-Terminal/dev-status.svg)](https://david-dm.org/loginov-rocks/Web-Bluetooth-Terminal?type=dev)
 
-![Favicon](https://1oginov.github.io/Web-Bluetooth-Terminal/icons/favicon-16x16.png)
-[https://1oginov.github.io/Web-Bluetooth-Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) — try it out,
-see how it works on [YouTube](https://www.youtube.com/watch?v=BNXN_931W_M), read tutorial on
-[Medium](https://medium.com/@1oginov/how-to-make-a-web-app-for-your-own-bluetooth-low-energy-device-arduino-2af8d16fdbe8)
+![Favicon](https://loginov-rocks.github.io/Web-Bluetooth-Terminal/icons/favicon-16x16.png)
+[https://loginov-rocks.github.io/Web-Bluetooth-Terminal](https://loginov-rocks.github.io/Web-Bluetooth-Terminal/) — try
+it out, see how it works on [YouTube](https://www.youtube.com/watch?v=BNXN_931W_M), read tutorial on
+[Medium](https://medium.com/@loginov-rocks/how-to-make-a-web-app-for-your-own-bluetooth-low-energy-device-arduino-2af8d16fdbe8)
 (English) or on [Habr](https://habr.com/post/339146/) (Russian).
 
 Web Bluetooth Terminal is a website that can **connect** with the remote devices which support **Bluetooth Low Energy**
@@ -17,7 +17,7 @@ application and work offline.
 **Killer feature:** the application establishes **serial communication** over BLE that is not provided by the
 specification, but needed if you want to make your own BLE IoT devices using affordable bluetooth modules.
 
-![Teaser](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/master/misc/Teaser.png)
+![Teaser](https://raw.githubusercontent.com/loginov-rocks/Web-Bluetooth-Terminal/master/misc/Teaser.png)
 
 The application utilises BLE service (`0xFFE0`) and characteristic (`0xFFE1`) available in low cost BLE modules based
 for example on CC2541 chip, such as HM-10, JDY-08, AT-09, CC41-A and other. Also, it bypasses 20 bytes limit specific
@@ -26,12 +26,12 @@ for GATT characteristics by keeping incoming messages in a buffer and waiting fo
 Check [Bluetooth Low Energy (Smart) device](#bluetooth-low-energy-smart-device) and
 [How to use this app as a base for my own project?](#how-to-use-this-app-as-a-base-for-my-own-project)
 sections for a quick start and to find out how to make your own project. Also, I've made
-[MeArm Controller](https://github.com/1oginov/MeArm-Controller) as a showcase project.
+[MeArm Controller](https://github.com/loginov-rocks/MeArm-Controller) as a showcase project.
 
 ## Features
 
-**Accessible via browser** — just go to the [website](https://1oginov.github.io/Web-Bluetooth-Terminal/) and you'll get
-the full featured application, it is not needed to install anything.
+**Accessible via browser** — just go to the [website](https://loginov-rocks.github.io/Web-Bluetooth-Terminal/) and
+you'll get the full featured application, it is not needed to install anything.
 
 **Cross-platform** — as long as the app is accessible via browser, you can use it with the desktop or with the smart
 phone [browser](#browser).
@@ -64,17 +64,17 @@ capabilities ([Web App Manifest](https://caniuse.com/#feat=web-app-manifest) and
 
 Different BLE devices implement their own services and characteristics to communicate with, but you can build your own
 simple device: you just need a BLE module (e.g. HM-10, JDY-08, AT-09, CC41-A) and an Arduino Uno. Wire it and upload the
-[bridge sketch](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/master/misc/Arduino-Bridge/Arduino-Bridge.ino).
+[bridge sketch](https://raw.githubusercontent.com/loginov-rocks/Web-Bluetooth-Terminal/master/misc/Arduino-Bridge/Arduino-Bridge.ino).
 
 Pay attention to what voltage level your BLE module consumes, since it can vary from device to device! Read
 specifications, you may need to connect your BLE module to the `3.3V` pin and use voltage level shifter between `TX` and
 `RX` pins.
 
-![Arduino Uno to BLE module wiring scheme](https://raw.githubusercontent.com/1oginov/Web-Bluetooth-Terminal/master/misc/Arduino-Bridge/Scheme.png)
+![Arduino Uno to BLE module wiring scheme](https://raw.githubusercontent.com/loginov-rocks/Web-Bluetooth-Terminal/master/misc/Arduino-Bridge/Scheme.png)
 
 Open Serial Monitor in Arduino IDE, switch baudrate to `9600` and line endings to `Both NL & CR`. Next, launch the
-[Web Bluetooth Terminal](https://1oginov.github.io/Web-Bluetooth-Terminal/) and connect to your module. Now you're able
-to make a small talk between the Terminal and the Serial Monitor!
+[Web Bluetooth Terminal](https://loginov-rocks.github.io/Web-Bluetooth-Terminal/) and connect to your module. Now you're
+able to make a small talk between the Terminal and the Serial Monitor!
 
 #### BLE module configuration
 
@@ -105,7 +105,7 @@ To use development capabilities, you'll need [Node.js](https://nodejs.org/), [np
 Install it, clone the repository and install `npm` dependencies:
 
 ```sh
-git clone https://github.com/1oginov/Web-Bluetooth-Terminal.git
+git clone https://github.com/loginov-rocks/Web-Bluetooth-Terminal.git
 cd Web-Bluetooth-Terminal
 npm install
 ```
@@ -152,8 +152,8 @@ command.
 
 ### BluetoothTerminal.js API
 
-Also, you can install [bluetooth-terminal](https://github.com/1oginov/bluetooth-terminal) package or
-[directly download the file](https://raw.githubusercontent.com/1oginov/bluetooth-terminal/master/src/BluetoothTerminal.js)
+Also, you can install [bluetooth-terminal](https://github.com/loginov-rocks/bluetooth-terminal) package or
+[directly download the file](https://raw.githubusercontent.com/loginov-rocks/bluetooth-terminal/master/src/BluetoothTerminal.js)
 containing `BluetoothTerminal` class written in ES6 and use it as you want. Here is a simple code snippet that can be
 helpful for a quick start:
 
@@ -180,7 +180,7 @@ terminal.disconnect();
 
 ## Contribution
 
-Please use the [dev](https://github.com/1oginov/Web-Bluetooth-Terminal/tree/dev) branch and feel free to contribute!
+Please use the [dev](https://github.com/loginov-rocks/Web-Bluetooth-Terminal/tree/dev) branch and feel free to contribute!
 
 ## Reference
 
