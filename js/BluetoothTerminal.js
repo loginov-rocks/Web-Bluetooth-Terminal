@@ -10,7 +10,7 @@ class BluetoothTerminal {
    * @param {string} [sendSeparator='\n'] - Send separator
    */
   constructor(serviceUuid = 0xFFE0, characteristicUuid = 0xFFE1,
-              receiveSeparator = '\n', sendSeparator = '\n') {
+      receiveSeparator = '\n', sendSeparator = '\n') {
     // Used private variables.
     this._receiveBuffer = ''; // Buffer containing not separated data.
     this._maxCharacteristicValueLength = 20; // Max characteristic value length.
@@ -149,7 +149,7 @@ class BluetoothTerminal {
     data += this._sendSeparator;
 
     // Split data to chunks by max characteristic value length.
-    let chunks = this.constructor._splitByLength(data,
+    const chunks = this.constructor._splitByLength(data,
         this._maxCharacteristicValueLength);
 
     // Return rejected promise immediately if there is no connected device.
@@ -331,7 +331,7 @@ class BluetoothTerminal {
    * @private
    */
   _handleDisconnection(event) {
-    let device = event.target;
+    const device = event.target;
 
     this._log('"' + device.name +
         '" bluetooth device disconnected, trying to reconnect...');
@@ -347,11 +347,11 @@ class BluetoothTerminal {
    * @private
    */
   _handleCharacteristicValueChanged(event) {
-    let value = new TextDecoder().decode(event.target.value);
+    const value = new TextDecoder().decode(event.target.value);
 
-    for (let c of value) {
+    for (const c of value) {
       if (c === this._receiveSeparator) {
-        let data = this._receiveBuffer.trim();
+        const data = this._receiveBuffer.trim();
         this._receiveBuffer = '';
 
         if (data) {
