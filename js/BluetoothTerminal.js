@@ -143,7 +143,7 @@ class BluetoothTerminal {
 
     // Return rejected promise immediately if data is empty.
     if (!data) {
-      return Promise.reject('Data must be not empty');
+      return Promise.reject(new Error('Data must be not empty'));
     }
 
     data += this._sendSeparator;
@@ -154,7 +154,7 @@ class BluetoothTerminal {
 
     // Return rejected promise immediately if there is no connected device.
     if (!this._characteristic) {
-      return Promise.reject('There is no connected device');
+      return Promise.reject(new Error('There is no connected device'));
     }
 
     // Write first chunk to the characteristic immediately.
@@ -166,7 +166,7 @@ class BluetoothTerminal {
       promise = promise.then(() => new Promise((resolve, reject) => {
         // Reject promise if the device has been disconnected.
         if (!this._characteristic) {
-          reject('Device has been disconnected');
+          reject(new Error('Device has been disconnected'));
         }
 
         // Write chunk to the characteristic and resolve the promise.
