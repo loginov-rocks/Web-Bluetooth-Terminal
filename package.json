@@ -1,14 +1,14 @@
 {
   "name": "web-bluetooth-terminal",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Progressive Web Application for serial communication with your own Bluetooth Low Energy (Smart) devices",
   "bin": "./cli.js",
   "scripts": {
     "build": "npm run js:vendor && npm run styles:vendor && npm run styles",
-    "js:vendor": "cpx node_modules/sw-toolbox/*.js js && cpx node_modules/bluetooth-terminal/src/*.js js",
+    "js:vendor": "cpx \"node_modules/sw-toolbox/*.js\" js && cpx \"node_modules/bluetooth-terminal/src/*.js\" js",
     "lint": "eslint cli.js sw.js js/main.js",
     "styles": "node-sass -o css scss",
-    "styles:vendor": "cpx node_modules/normalize.css/normalize.css css",
+    "styles:vendor": "cpx \"node_modules/normalize.css/normalize.css\" css",
     "watch:styles": "nodemon -e scss -x \"npm run styles\""
   },
   "repository": {
@@ -38,12 +38,12 @@
     "git-clone": "^0.1.0"
   },
   "devDependencies": {
-    "bluetooth-terminal": "^1.3.4",
+    "bluetooth-terminal": "^1.3.5",
     "cpx": "^1.5.0",
-    "eslint": "^5.11.1",
-    "eslint-config-google": "^0.11.0",
+    "eslint": "^5.14.1",
+    "eslint-config-google": "^0.12.0",
     "node-sass": "^4.11.0",
-    "nodemon": "^1.18.9",
+    "nodemon": "^1.18.10",
     "normalize.css": "^8.0.1",
     "sw-toolbox": "^3.6.0"
   }
