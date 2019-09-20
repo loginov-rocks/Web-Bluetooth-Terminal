@@ -13,7 +13,8 @@ class BluetoothTerminal {
       receiveSeparator = '\n', sendSeparator = '\n') {
     // Used private variables.
     this._receiveBuffer = ''; // Buffer containing not separated data.
-    this._maxCharacteristicValueLength = 20; // Max characteristic value length.
+    this._maxCharacteristicValueLengthText = 20; // Max characteristic value length.
+    this._maxCharacteristicValueLengthHex = 49 // Lenght of 20 hex values seperated by ' '
     this._device = null; // Device object cache.
     this._characteristic = null; // Characteristic object cache.
 
@@ -137,7 +138,7 @@ class BluetoothTerminal {
    * @return {Promise} Promise which will be fulfilled when data will be sent or
    *                   rejected if something went wrong
    */
-  send(data) {
+  send(data,mode) {
     // Convert data to the string using global object.
     data = String(data || '');
 
@@ -149,8 +150,10 @@ class BluetoothTerminal {
     data += this._sendSeparator;
 
     // Split data to chunks by max characteristic value length.
-    const chunks = this.constructor._splitByLength(data,
-        this._maxCharacteristicValueLength);
+    let length = 0;
+    if(mode == 'Text'){length = this._maxCharacteristicValueLengthText;}
+    if(mode == 'Hex'){length = this._maxCharacteristicValueLengthHex;}
+    const chunks = this.constructor._splitByLength(data,length);
 
     // Return rejected promise immediately if there is no connected device.
     if (!this._characteristic) {
@@ -158,8 +161,9 @@ class BluetoothTerminal {
     }
 
     // Write first chunk to the characteristic immediately.
-    let promise = this._writeToCharacteristic(this._characteristic, chunks[0]);
-
+    	
+    let promise = this._writeToCharacteristic(this._characteristic, chunks[0], mode);
+	
     // Iterate over chunks if there are more than one of it.
     for (let i = 1; i < chunks.length; i++) {
       // Chain new promise.
@@ -170,12 +174,12 @@ class BluetoothTerminal {
         }
 
         // Write chunk to the characteristic and resolve the promise.
-        this._writeToCharacteristic(this._characteristic, chunks[i]).
+        this._writeToCharacteristic(this._characteristic, chunks[i], mode).
             then(resolve).
             catch(reject);
       }));
     }
-
+	
     return promise;
   }
 
@@ -367,12 +371,31 @@ class BluetoothTerminal {
    * Write to characteristic.
    * @param {Object} characteristic
    * @param {string} data
+   * @param {string} mode
    * @return {Promise}
    * @private
    */
-  _writeToCharacteristic(characteristic, data) {
+  _writeToCharacteristic(characteristic, data, mode) {
+    console.log(mode);
+    if(mode == 'Text'){
     return characteristic.writeValue(new TextEncoder().encode(data));
+	}else{
+    if(mode == 'Hex'){
+	let splitted = data.split(' ');
+	console.log(splitted);
+	let arr = []   
+	for (let i = 0 ; i < splitted.length;i++){
+		//To avoid the case where this chunk begins with a ' '
+		if(splitted[i].length != 0){
+		arr.push(parseInt(splitted[i],16));
+	}}
+	console.log(arr);
+    	return characteristic.writeValue(new Uint8Array(arr));
+}
+    }
+    
   }
+
 
   /**
    * Log.

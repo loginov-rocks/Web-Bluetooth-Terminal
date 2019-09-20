@@ -5,6 +5,7 @@ const disconnectButton = document.getElementById('disconnect');
 const terminalContainer = document.getElementById('terminal');
 const sendForm = document.getElementById('send-form');
 const inputField = document.getElementById('input');
+const modeRadios = document.getElementsByName('mode');
 
 // Helpers.
 const defaultDeviceName = 'Terminal';
@@ -46,8 +47,8 @@ terminal._log = function(...messages) {
 };
 
 // Implement own send function to log outcoming data to the terminal.
-const send = (data) => {
-  terminal.send(data).
+const send = (data,mode) => {
+  terminal.send(data,mode).
       then(() => logToTerminal(data, 'out')).
       catch((error) => logToTerminal(error));
 };
@@ -67,10 +68,15 @@ disconnectButton.addEventListener('click', () => {
 });
 
 sendForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  send(inputField.value);
-
+  event.preventDefault();  
+    for (var i = 0, length = modeRadios.length; i < length; i++)
+    {
+      if (modeRadios[i].checked)
+      {
+  	send(inputField.value,modeRadios[i].id);
+	break;
+ 	}
+     }
   inputField.value = '';
   inputField.focus();
 });
