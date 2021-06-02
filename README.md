@@ -189,3 +189,26 @@ Please use the [dev](https://github.com/loginov-rocks/Web-Bluetooth-Terminal/tre
 3. [Interact with Bluetooth devices on the Web](https://developers.google.com/web/updates/2015/07/interact-with-ble-devices-on-the-web/)
 4. [Progressive Web Apps](https://developers.google.com/web/progressive-web-apps/)
 5. [Service Worker Toolbox](https://github.com/GoogleChromeLabs/sw-toolbox/)
+
+## Gists
+
+1. https://gist.github.com/loginov-rocks/8aeb19f207b1da53eaa553faa7aa8a51
+2. https://gist.github.com/loginov-rocks/c0709f22540c01cf532ec0d311f059e2
+3. https://gist.github.com/loginov-rocks/0e4ff696195863e99853b126aca8ecb1
+4. https://gist.github.com/loginov-rocks/ad98c6a48394d48c3252d7694ffb5e57
+5. https://gist.github.com/loginov-rocks/1156e4581ec9f68a20cc6acb1cd6e52a
+6. https://gist.github.com/loginov-rocks/26d9714acbfbcb723c79bb8e23128e3c
+7. https://gist.github.com/loginov-rocks/f918a2b11b98d20808a12a8c923e74bc
+8. https://gist.github.com/loginov-rocks/d23a840d2c38b88ed3f55f2be62bf7ba
+9. https://gist.github.com/loginov-rocks/4cf8d0d720dafcf52781748d5c975452
+10. https://gist.github.com/loginov-rocks/fa0478f085410d1f59ede2f653af0e5c
+11. https://gist.github.com/loginov-rocks/44c7a144a1548ab08426bc675854d183
+12. https://gist.github.com/loginov-rocks/e03b1dd9e038eaf4eb65413d97a34678
+13. https://gist.github.com/loginov-rocks/b39e4e5c6d0c95b404172ad04baf8b28
+14. https://gist.github.com/loginov-rocks/140ee65772f87ab775cb94cae850eb3a
+15. https://gist.github.com/loginov-rocks/b060cecbe50f09f40e2c29f6e3b7dc67
+16. https://gist.github.com/loginov-rocks/c88f7eed3bfaa8685b594a2e19813a43
+17. https://gist.github.com/loginov-rocks/58a1b7428f9a3bbc71a49ef36bea6e34
+18. https://gist.github.com/loginov-rocks/49e208008b95da9c8de985c15f383dd8
+19. https://gist.github.com/loginov-rocks/8451dcae975e746e3283c7190a75441e
+20. https://gist.github.com/loginov-rocks/f0bd2c16640c9493e19df8262afeb995
