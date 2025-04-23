@@ -1,15 +1,21 @@
 {
   "name": "web-bluetooth-terminal",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Progressive Web Application for serial communication with your own Bluetooth Low Energy (Smart) devices",
   "bin": "./cli.js",
   "scripts": {
-    "build": "npm run js:vendor && npm run styles:vendor && npm run styles",
-    "js:vendor": "copyfiles -f node_modules/sw-toolbox/*.js node_modules/bluetooth-terminal/dist/BluetoothTerminal.js dist/js",
-    "lint": "eslint cli.js sw.js js/main.js",
-    "styles": "sass src/styles/styles.scss:dist/css/styles.css --no-source-map",
-    "styles:vendor": "copyfiles -f node_modules/normalize.css/normalize.css dist/css",
-    "watch:styles": "npm run styles -- --watch"
+    "build": "npm run build:clean && npm run build:html && npm run build:js && npm run build:public && npm run build:styles",
+    "build:clean": "rimraf dist",
+    "build:deps:js": "copyfiles -f node_modules/sw-toolbox/*.js node_modules/bluetooth-terminal/dist/BluetoothTerminal.js dist/js",
+    "build:deps:styles": "copyfiles -f node_modules/normalize.css/normalize.css dist/css",
+    "build:html": "copyfiles -f src/*.html dist",
+    "build:js": "npm run build:deps:js && npm run build:src:js",
+    "build:public": "copyfiles -f public/* dist && copyfiles -f public/icons/* dist/icons",
+    "build:src:js": "copyfiles -f src/sw.js dist && copyfiles -f src/main.js dist/js",
+    "build:src:styles": "sass src/styles/styles.scss:dist/css/styles.css --no-source-map",
+    "build:styles": "npm run build:deps:styles && npm run build:src:styles",
+    "dev:src:styles": "npm run build:src:styles -- --watch",
+    "lint": "eslint cli.js sw.js js/main.js"
   },
   "repository": {
     "type": "git",
@@ -43,6 +49,7 @@
     "eslint": "^5.14.1",
     "eslint-config-google": "^0.12.0",
     "normalize.css": "^8.0.1",
+    "rimraf": "^6.0.1",
     "sass": "^1.87.0",
     "sw-toolbox": "^3.6.0"
   }
