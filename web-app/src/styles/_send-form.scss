@@ -1,3 +1,5 @@
+@use 'config';
+
 .send-form {
   display: flex;
   flex-shrink: 0;
@@ -5,13 +7,13 @@
   input {
     background: none;
     border: none;
-    color: $text-color;
+    color: config.$text-color;
     flex-grow: 1;
     font: normal 16px/1.5 'Roboto Mono', monospace;
     padding: 0 8px;
 
     &::placeholder {
-      color: $secondary-color;
+      color: config.$secondary-color;
     }
   }
 

@@ -1,7 +1,9 @@
+@use 'config';
+
 button {
   background: none;
   border: none;
-  color: $text-color;
+  color: config.$text-color;
   cursor: pointer;
   margin: 0;
   padding: 12px;
@@ -9,8 +11,8 @@ button {
   user-select: none;
 
   &:active {
-    background: $dividers-color;
-    color: $secondary-color;
+    background: config.$dividers-color;
+    color: config.$secondary-color;
   }
 
   i.material-icons {
