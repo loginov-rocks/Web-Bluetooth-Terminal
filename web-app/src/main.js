@@ -20,8 +20,7 @@ const scrollElement = (element) => {
 };
 
 const logToTerminal = (message, type = '') => {
-  terminalContainer.insertAdjacentHTML('beforeend',
-      `<div${type && ` class="${type}"`}>${message}</div>`);
+  terminalContainer.insertAdjacentHTML('beforeend', `<div${type && ` class="${type}"`}>${message}</div>`);
 
   if (isTerminalAutoScrolling) {
     scrollElement(terminalContainer);
@@ -41,7 +40,7 @@ terminal._log = function(...messages) {
   // We can't use `super._log()` here.
   messages.forEach((message) => {
     logToTerminal(message);
-    console.log(message); // eslint-disable-line no-console
+    console.log(message);
   });
 };
 
@@ -56,8 +55,7 @@ const send = (data) => {
 connectButton.addEventListener('click', () => {
   terminal.connect().
       then(() => {
-        deviceNameLabel.textContent = terminal.getDeviceName() ?
-            terminal.getDeviceName() : defaultDeviceName;
+        deviceNameLabel.textContent = terminal.getDeviceName() ? terminal.getDeviceName() : defaultDeviceName;
       });
 });
 
@@ -77,8 +75,7 @@ sendForm.addEventListener('submit', (event) => {
 
 // Switch terminal auto scrolling if it scrolls out of bottom.
 terminalContainer.addEventListener('scroll', () => {
-  const scrollTopOffset = terminalContainer.scrollHeight -
-      terminalContainer.offsetHeight - terminalAutoScrollingLimit;
+  const scrollTopOffset = terminalContainer.scrollHeight - terminalContainer.offsetHeight - terminalAutoScrollingLimit;
 
   isTerminalAutoScrolling = (scrollTopOffset < terminalContainer.scrollTop);
 });

@@ -15,7 +15,7 @@
     "build:src:styles": "sass src/styles/styles.scss:dist/css/styles.css --no-source-map",
     "build:styles": "npm run build:deps:styles && npm run build:src:styles",
     "dev:src:styles": "npm run build:src:styles -- --watch",
-    "lint": "eslint cli.js sw.js js/main.js",
+    "lint": "eslint src eslint.config.mjs",
     "serve": "browser-sync start --server dist",
     "start": "npm run serve -- --watch"
   },
@@ -46,11 +46,13 @@
     "git-clone": "^0.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.25.1",
     "bluetooth-terminal": "^1.6.0",
     "browser-sync": "^3.0.4",
     "copyfiles": "^2.4.1",
-    "eslint": "^5.14.1",
-    "eslint-config-google": "^0.12.0",
+    "eslint": "^9.25.1",
+    "eslint-config-google": "^0.14.0",
+    "globals": "^16.0.0",
     "normalize.css": "^8.0.1",
     "rimraf": "^6.0.1",
     "sass": "^1.87.0",

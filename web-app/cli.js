@@ -13,8 +13,7 @@ const tag = 'v' + packageJson.version;
 
 const destination = process.argv[2] || './';
 
-process.stdout.write(`Cloning Git repository from ${repository} to ` +
-    `${destination} using ${tag}...`);
+process.stdout.write(`Cloning Git repository from ${repository} to ${destination} using ${tag}...`);
 
 gitClone(repository, destination, {checkout: tag}, () => {
   process.stdout.write(' done!\n');
