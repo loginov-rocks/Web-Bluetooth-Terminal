@@ -1,0 +1,30 @@
+name: Web App CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - web-app/**
+  pull_request:
+    branches:
+      - main
+    paths:
+      - web-app/**
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: CI
+    defaults:
+      run:
+        working-directory: web-app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
