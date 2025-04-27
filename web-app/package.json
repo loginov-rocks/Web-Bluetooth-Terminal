@@ -2,7 +2,10 @@
   "name": "web-bluetooth-terminal",
   "version": "1.4.0",
   "description": "Progressive Web Application for serial communication with your own Bluetooth Low Energy (Smart) devices",
-  "bin": "./cli.js",
+  "engines": {
+    "node": "22",
+    "npm": "10"
+  },
   "scripts": {
     "build": "npm run build:clean && npm run build:html && npm run build:js && npm run build:public && npm run build:styles",
     "build:clean": "rimraf dist",
@@ -38,13 +41,11 @@
   ],
   "author": "Danila Loginov <danila@loginov.rocks> (https://loginov.rocks)",
   "license": "MIT",
+  "private": true,
   "bugs": {
     "url": "https://github.com/loginov-rocks/Web-Bluetooth-Terminal/issues"
   },
-  "homepage": "https://loginov-rocks.github.io/Web-Bluetooth-Terminal",
-  "dependencies": {
-    "git-clone": "^0.1.0"
-  },
+  "homepage": "https://loginov-rocks.github.io/Web-Bluetooth-Terminal/",
   "devDependencies": {
     "@eslint/js": "^9.25.1",
     "bluetooth-terminal": "^1.6.0",
