@@ -3,77 +3,100 @@ const deviceNameLabel = document.getElementById('device-name');
 const connectButton = document.getElementById('connect');
 const disconnectButton = document.getElementById('disconnect');
 const terminalContainer = document.getElementById('terminal');
-const sendForm = document.getElementById('send-form');
-const inputField = document.getElementById('input');
+const messageForm = document.getElementById('message-form');
+const messageInput = document.getElementById('message-input');
 
 // Helpers.
-const defaultDeviceName = 'Terminal';
+const defaultDeviceName = 'Web Bluetooth Terminal';
 const terminalAutoScrollingLimit = terminalContainer.offsetHeight / 2;
 let isTerminalAutoScrolling = true;
-
-const scrollElement = (element) => {
-  const scrollTop = element.scrollHeight - element.offsetHeight;
-
-  if (scrollTop > 0) {
-    element.scrollTop = scrollTop;
-  }
-};
 
 const logToTerminal = (message, type = '') => {
   terminalContainer.insertAdjacentHTML('beforeend', `<div${type && ` class="${type}"`}>${message}</div>`);
 
   if (isTerminalAutoScrolling) {
-    scrollElement(terminalContainer);
+    const scrollTop = terminalContainer.scrollHeight - terminalContainer.offsetHeight;
+
+    if (scrollTop > 0) {
+      terminalContainer.scrollTop = scrollTop;
+    }
   }
 };
 
-// Obtain configured instance.
-const terminal = new BluetoothTerminal();
+// Create a BluetoothTerminal instance with the default configuration.
+const bluetoothTerminal = new BluetoothTerminal({
+  // serviceUuid: 0xFFE0,
+  // characteristicUuid: 0xFFE1,
+  // characteristicValueSize: 20,
+  // receiveSeparator: '\n',
+  // sendSeparator: '\n',
+  // logLevel: 'log',
+});
 
-// Override `receive` method to log incoming data to the terminal.
-terminal.receive = function(data) {
-  logToTerminal(data, 'in');
-};
+// Set a callback that will be called when an incoming message from the connected device is received.
+bluetoothTerminal.onReceive((message) => {
+  logToTerminal(message, 'incoming');
+});
 
-// Override default log method to output messages to the terminal and console.
-terminal._log = function(...messages) {
-  // We can't use `super._log()` here.
-  messages.forEach((message) => {
-    logToTerminal(message);
-    console.log(message);
-  });
-};
+// Set a callback that will be called every time any log message is produced by the class, regardless of the log level
+// set.
+bluetoothTerminal.onLog((logLevel, method, message) => {
+  // Ignore debug messages.
+  if (logLevel === 'debug') {
+    return;
+  }
 
-// Implement own send function to log outcoming data to the terminal.
-const send = (data) => {
-  terminal.send(data).
-      then(() => logToTerminal(data, 'out')).
-      catch((error) => logToTerminal(error));
-};
+  logToTerminal(message);
+});
 
 // Bind event listeners to the UI elements.
-connectButton.addEventListener('click', () => {
-  terminal.connect().
-      then(() => {
-        deviceNameLabel.textContent = terminal.getDeviceName() ? terminal.getDeviceName() : defaultDeviceName;
-      });
+connectButton.addEventListener('click', async () => {
+  try {
+    // Open the browser Bluetooth device picker to select a device if none was previously selected, establish a
+    // connection with the selected device, and initiate communication.
+    await bluetoothTerminal.connect();
+  } catch (error) {
+    logToTerminal(error, 'error');
+
+    return;
+  }
+
+  // Retrieve the name of the currently connected device.
+  deviceNameLabel.textContent = bluetoothTerminal.getDeviceName() || defaultDeviceName;
 });
 
 disconnectButton.addEventListener('click', () => {
-  terminal.disconnect();
+  try {
+    // Disconnect from the currently connected device and clean up associated resources.
+    bluetoothTerminal.disconnect();
+  } catch (error) {
+    logToTerminal(error, 'error');
+
+    return;
+  }
+
   deviceNameLabel.textContent = defaultDeviceName;
 });
 
-sendForm.addEventListener('submit', (event) => {
+messageForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  send(inputField.value);
+  try {
+    // Send a message to the connected device.
+    await bluetoothTerminal.send(messageInput.value);
+  } catch (error) {
+    logToTerminal(error, 'error');
 
-  inputField.value = '';
-  inputField.focus();
+    return;
+  }
+
+  logToTerminal(messageInput.value, 'outgoing');
+
+  messageInput.value = '';
+  messageInput.focus();
 });
 
-// Switch terminal auto scrolling if it scrolls out of bottom.
+// Enable terminal auto-scrolling if it scrolls beyond the bottom.
 terminalContainer.addEventListener('scroll', () => {
   const scrollTopOffset = terminalContainer.scrollHeight - terminalContainer.offsetHeight - terminalAutoScrollingLimit;
 

@@ -13,12 +13,16 @@
     padding: 4px 8px;
     word-break: break-word;
 
-    &.out {
-      color: config.$terminal-out-color;
+    &.error {
+      color: config.$terminal-error-color;
     }
 
-    &.in {
-      color: config.$terminal-in-color;
+    &.incoming {
+      color: config.$terminal-incoming-color;
+    }
+
+    &.outgoing {
+      color: config.$terminal-outgoing-color;
     }
   }
 }
