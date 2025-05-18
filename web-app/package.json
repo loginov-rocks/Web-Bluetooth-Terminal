@@ -17,6 +17,7 @@
     "build:src:js": "copyfiles -f src/sw.js dist && copyfiles -f src/main.js dist/js",
     "build:src:styles": "sass src/styles/styles.scss:dist/css/styles.css --no-source-map",
     "build:styles": "npm run build:deps:styles && npm run build:src:styles",
+    "deploy": "gh-pages -d dist",
     "dev:src:styles": "npm run build:src:styles -- --watch",
     "lint": "eslint src eslint.config.mjs",
     "serve": "browser-sync start --server dist",
@@ -47,16 +48,17 @@
   },
   "homepage": "https://loginov-rocks.github.io/Web-Bluetooth-Terminal/",
   "devDependencies": {
-    "@eslint/js": "^9.25.1",
+    "@eslint/js": "^9.27.0",
     "bluetooth-terminal": "^1.6.0",
     "browser-sync": "^3.0.4",
     "copyfiles": "^2.4.1",
-    "eslint": "^9.25.1",
+    "eslint": "^9.27.0",
     "eslint-config-google": "^0.14.0",
-    "globals": "^16.0.0",
+    "gh-pages": "^6.3.0",
+    "globals": "^16.1.0",
     "normalize.css": "^8.0.1",
     "rimraf": "^6.0.1",
-    "sass": "^1.87.0",
+    "sass": "^1.89.0",
     "sw-toolbox": "^3.6.0"
   }
 }
