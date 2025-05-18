@@ -1,0 +1,23 @@
+@use 'config';
+
+.message-form {
+  display: flex;
+  flex-shrink: 0;
+
+  input {
+    background: none;
+    border: none;
+    color: config.$text-color;
+    flex-grow: 1;
+    font: normal 16px/1.5 'Roboto Mono', monospace;
+    padding: 0 8px;
+
+    &::placeholder {
+      color: config.$secondary-color;
+    }
+  }
+
+  button {
+    flex-shrink: 0;
+  }
+}

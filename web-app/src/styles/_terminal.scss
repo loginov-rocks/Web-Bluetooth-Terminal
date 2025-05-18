@@ -1,0 +1,28 @@
+@use 'config';
+
+.terminal {
+  border: 1px solid config.$dividers-color;
+  border-width: 1px 0;
+  flex-grow: 1;
+  overflow: auto;
+  padding: 4px 0;
+
+  div {
+    color: config.$terminal-default-color;
+    line-height: 1;
+    padding: 4px 8px;
+    word-break: break-word;
+
+    &.error {
+      color: config.$terminal-error-color;
+    }
+
+    &.incoming {
+      color: config.$terminal-incoming-color;
+    }
+
+    &.outgoing {
+      color: config.$terminal-outgoing-color;
+    }
+  }
+}

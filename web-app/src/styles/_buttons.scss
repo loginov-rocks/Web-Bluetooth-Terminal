@@ -1,0 +1,21 @@
+@use 'config';
+
+button {
+  background: none;
+  border: none;
+  color: config.$text-color;
+  cursor: pointer;
+  margin: 0;
+  padding: 12px;
+  transition: background 0.3s, color 0.3s;
+  user-select: none;
+
+  &:active {
+    background: config.$dividers-color;
+    color: config.$secondary-color;
+  }
+
+  i.material-icons {
+    vertical-align: middle;
+  }
+}

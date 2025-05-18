@@ -1,0 +1,14 @@
+// General colors.
+$background-color: #ffffff;
+$basic-color: #000000;
+$text-color: rgba($basic-color, 0.87);
+$secondary-color: rgba($basic-color, 0.54);
+$hint-color: rgba($basic-color, 0.38);
+$dividers-color: rgba($basic-color, 0.12);
+
+// Terminal colors.
+// @see https://m1.material.io/style/color.html#color-color-palette
+$terminal-default-color: #9E9E9E; // Gray 500
+$terminal-error-color: #F44336; // Red 500
+$terminal-incoming-color: #4CAF50; // Green 500
+$terminal-outgoing-color: #2196F3; // Blue 500
