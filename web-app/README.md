@@ -25,3 +25,16 @@ Deployment: `gh-pages`.
 ### Tools
 
 * https://realfavicongenerator.net to generate icons and manifest.
+
+On top of what manifest realfavicongenerator.net created, also added `start_url` and `"purpose": "maskable any"` for
+`192x192` icon added - these are required.
+
+To fulfill other parameters added:
+* `description`
+* `orientation`
+
+* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable#required_manifest_members
+* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/start_url
+* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/icons#purpose
+* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/description
+* https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/orientation
