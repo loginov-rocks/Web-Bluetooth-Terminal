@@ -12,6 +12,7 @@
  * or `Serial3` for Arduino Mega).
  */
 
+#include <Arduino.h>
 #include <SoftwareSerial.h>
 
 #define PC_SERIAL_BAUDRATE  9600
@@ -35,4 +36,3 @@ void loop()
         SerialBt.write(Serial.read());
     }
 }
-

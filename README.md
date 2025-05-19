@@ -68,7 +68,7 @@ Pay attention to what voltage level your BLE module consumes, since it can vary 
 specifications, you may need to connect your BLE module to the `3.3V` pin and use voltage level shifter between `TX` and
 `RX` pins.
 
-![Arduino Uno to BLE module wiring scheme](https://raw.githubusercontent.com/loginov-rocks/Web-Bluetooth-Terminal/main/firmware/Arduino-Bridge/Scheme.png)
+![Arduino Uno to BLE module wiring scheme](https://raw.githubusercontent.com/loginov-rocks/Web-Bluetooth-Terminal/main/docs/Arduino-Uno-Scheme.png)
 
 Open Serial Monitor in Arduino IDE, switch baudrate to `9600` and line endings to `Both NL & CR`. Next, launch the
 [Web Bluetooth Terminal](https://loginov-rocks.github.io/Web-Bluetooth-Terminal/) and connect to your module. Now you're
