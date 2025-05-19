@@ -18,7 +18,7 @@ export default defineConfig([
         ...globals.browser,
         BluetoothTerminal: 'readonly',
         importScripts: 'readonly',
-        toolbox: 'readonly',
+        workbox: 'readonly',
       },
     },
     plugins: {

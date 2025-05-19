@@ -10,7 +10,7 @@ Requires Node.js v22 (for development only).
 
 ### Build Dependencies
 
-`bluetooth-terminal`, `normalize.css`, `sw-toolbox`.
+`bluetooth-terminal`, `normalize.css`.
 
 ### Development Dependencies
 
@@ -22,14 +22,15 @@ Manual build process: `browser-sync`, `copyfiles`, `rimraf`.
 
 Deployment: `gh-pages`.
 
-### Tools
+### Icons and Manifest
 
-* https://realfavicongenerator.net to generate icons and manifest.
+Icons are generated from single source: `web-app/assets/icon.png` with https://realfavicongenerator.net
 
 On top of what manifest realfavicongenerator.net created, also added `start_url` and `"purpose": "maskable any"` for
 `192x192` icon added - these are required.
 
-To fulfill other parameters added:
+To fulfill other parameters in Google Chrome I added:
+
 * `description`
 * `orientation`
 

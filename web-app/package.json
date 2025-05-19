@@ -9,12 +9,12 @@
   "scripts": {
     "build": "npm run build:clean && npm run build:html && npm run build:js && npm run build:public && npm run build:styles",
     "build:clean": "rimraf dist",
-    "build:deps:js": "copyfiles -f node_modules/sw-toolbox/*.js node_modules/bluetooth-terminal/dist/BluetoothTerminal.js dist/js",
+    "build:deps:js": "copyfiles -f node_modules/bluetooth-terminal/dist/BluetoothTerminal.js dist/js",
     "build:deps:styles": "copyfiles -f node_modules/normalize.css/normalize.css dist/css",
     "build:html": "copyfiles -f src/*.html dist",
     "build:js": "npm run build:deps:js && npm run build:src:js",
     "build:public": "copyfiles -f public/* dist && copyfiles -f public/icons/* dist/icons",
-    "build:src:js": "copyfiles -f src/sw.js dist && copyfiles -f src/main.js dist/js",
+    "build:src:js": "copyfiles -f src/sw.js dist && copyfiles -f src/main.js src/register-sw.js dist/js",
     "build:src:styles": "sass src/styles/styles.scss:dist/css/styles.css --no-source-map",
     "build:styles": "npm run build:deps:styles && npm run build:src:styles",
     "deploy": "gh-pages -d dist",
@@ -58,7 +58,6 @@
     "globals": "^16.1.0",
     "normalize.css": "^8.0.1",
     "rimraf": "^6.0.1",
-    "sass": "^1.89.0",
-    "sw-toolbox": "^3.6.0"
+    "sass": "^1.89.0"
   }
 }
