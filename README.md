@@ -80,6 +80,9 @@ When a BLE module is waiting for connection it can be configured with `AT` comma
 make BLE module work as expected you can use following commands, but again, read specifications! Here are some commands
 I use with CC41-A module:
 
+* `AT` - check if the command terminal work normally;
+* `AT+HELP` - list all the commands;
+* `AT+BAUD` - get/set baud rate;
 * `AT+DEFAULT` — resets the module to the defaults;
 * `AT+RESET` — resets the module softly;
 * `AT+ROLE` — gets the module working mode;
