@@ -1,13 +1,15 @@
 #include <Arduino.h>
 
-String inputBuffer = "";
-bool commandComplete = false;
+String receiveBuffer = "";
+bool isReceiveBufferComplete = false;
+
+String transmitBuffer = "";
+bool isTransmitBufferComplete = false;
 
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("AT Command Interface Started");
-  Serial.println("Type complete command and press Enter");
+  Serial.println("Type a complete message and press Enter to send");
 
   Serial3.begin(9600);
   delay(1000);
@@ -15,45 +17,70 @@ void setup()
 
 void loop()
 {
-  // BT to Serial
+  // Receive first to prioritize incoming messages.
+  // Read incoming data from the Bluetooth module.
   while (Serial3.available())
   {
     char c = Serial3.read();
-    Serial.write(c);
+
+    // Build a message until the line ending is found.
+    if (c != '\n' && c != '\r')
+    {
+      receiveBuffer += c;
+    }
+    else if (receiveBuffer.length() > 0)
+    {
+      // Complete message received.
+      isReceiveBufferComplete = true;
+    }
   }
 
-  // Build command from Serial input
-  while (Serial.available() && !commandComplete)
+  // Display the complete received message.
+  if (isReceiveBufferComplete)
+  {
+    Serial.print("Message received: \"");
+    Serial.print(receiveBuffer);
+    Serial.println("\"");
+
+    // Clear buffer for next message.
+    receiveBuffer = "";
+    isReceiveBufferComplete = false;
+  }
+
+  // Transmit second after handling received messages.
+  // Read incoming data from the Serial (user terminal).
+  while (Serial.available() && !isTransmitBufferComplete)
   {
     char c = Serial.read();
 
-    // Echo character
+    // Optional: uncomment to echo character on input.
     Serial.write(c);
 
-    // Add to buffer if not a line ending
+    // Build a message until the line ending is found.
     if (c != '\n' && c != '\r')
     {
-      inputBuffer += c;
+      transmitBuffer += c;
     }
-    else if (inputBuffer.length() > 0)
+    else if (transmitBuffer.length() > 0)
     {
-      // Line ending received with data in buffer
-      commandComplete = true;
+      // Complete message received.
+      isTransmitBufferComplete = true;
     }
   }
 
-  // Send complete command
-  if (commandComplete)
+  // Send a complete message to the Bluetooth module.
+  if (isTransmitBufferComplete)
   {
-    Serial.print("\r\nSending command: ");
-    Serial.println(inputBuffer);
+    Serial.print("Transmitting message: \"");
+    Serial.print(transmitBuffer);
+    Serial.println("\"...");
 
-    // Send with proper line endings
-    Serial3.print(inputBuffer);
+    // Send with line endings required by the Bluetooth module used.
+    Serial3.print(transmitBuffer);
     Serial3.print("\r\n");
 
-    // Reset for next command
-    inputBuffer = "";
-    commandComplete = false;
+    // Clear buffer for next message.
+    transmitBuffer = "";
+    isTransmitBufferComplete = false;
   }
 }
